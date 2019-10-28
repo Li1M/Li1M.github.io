@@ -8,12 +8,12 @@
 
 
 <p>只需GET传参cat=dog即可</p>
-<p>![1572099090928](F:\blog\Li1M.github.io\source_posts\Syc Geek 10th web部分题解\1572099090928.png)</p>
+<p><img src="1572099090928.png" alt="1572099090928"></p>
 <p>2.你看见过我的菜刀么</p>
 <p>打开一看页面有一句话，是事先写好的，通过构造参数可以执行任意命令，往往配合菜刀，蚁剑等工具一起使用。</p>
 <figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="keyword">eval</span>($_POST[<span class="string">"Syc"</span>]);</span><br></pre></td></tr></table></figure>
 
-<p>![1572100049777](F:\blog\Li1M.github.io\source_posts\Syc Geek 10th web部分题解\1572100049777.png)</p>
+<p><img src="1572100049777.png" alt="1572100049777"></p>
 <p>这里简单读取一下flag文件，也可以使用菜刀，蚁剑连接。</p>
 <p>3.BurpSuiiiiiit!!! </p>
 <p>下载文件，解压一下是个jar文件，是burpsuite的扩展包，用burpsuite导入一下就能得到flag</p>
