@@ -195,7 +195,7 @@
 <p>1.安装docker</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt-get update	//更新系统软件</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt-get install </span><br><span class="line">apt-get install apt-transport-https</span><br><span class="line">apt-get install ca-certificates</span><br><span class="line">apt-get install curl</span><br><span class="line">apt-get installsoft ware-properties-common	//安装依赖包</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt-get install </span><br><span class="line">apt-get install apt-transport-https</span><br><span class="line">apt-get install ca-certificates</span><br><span class="line">apt-get install curl</span><br><span class="line">apt-get install software-properties-common	//安装依赖包</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -	//添加官方密钥</span><br></pre></td></tr></table></figure>
 
