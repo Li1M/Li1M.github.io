@@ -219,7 +219,7 @@
 
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -it -d --name ctf -p 8087:80 ubuntu:16.04	//使用ubuntu:16.04镜像，在后台以名字为ctf，映射端口为8087--&gt;80运行一个容器</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker ps	//查看正在运行的docker容器</span><br><span class="line">docker ps -a	//查看所有的docker容器</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker ps	//查看正在运行的docker容器</span><br><span class="line">docker ps -a	//查看所有的docker容器</span><br><span class="line">docker start id		//运行docker容器</span><br><span class="line">docker stop id		//停止docker容器</span><br></pre></td></tr></table></figure>
 
 <p>3.用容器部署CTF题</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it id /bin/bash	//进入docker容器shell，id一般取前三位即可</span><br></pre></td></tr></table></figure>
