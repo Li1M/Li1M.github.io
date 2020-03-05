@@ -61,9 +61,9 @@
 </ul>
 <p>php中命令执行涉及到的函数：</p>
 <ul>
-<li>代码执行：<code>eval()、assert()、popen()、system()、exec()、shell_exec()、passthru(),pcntl_exec(),call_user_func_array(),create_function()</code> </li>
+<li>代码执行：<code>eval(),assert(),popen(),system(),exec(),shell_exec(),passthru(),pcntl_exec(),call_user_func_array(),create_function()</code> </li>
 <li>文件读取：<code>file_get_contents(),highlight_file(),fopen(),read file(),fread(),fgetss(), fgets(),parse_ini_file(),show_source(),file()等</code></li>
-<li>命令执行：<code>system(), exec(), shell_exec(), passthru() ,pcntl_exec(), popen(),proc_open()</code></li>
+<li>命令执行：<code>system(),exec(),shell_exec(),passthru(),pcntl_exec(),popen(),proc_open()</code></li>
 </ul>
 ]]></content>
       <tags>
