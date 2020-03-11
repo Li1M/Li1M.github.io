@@ -63,7 +63,7 @@
 <meta property="og:site_name" content="LiM&#39;s blog">
 <meta property="og:description" content="在此记录平时看到的一些面试问题，为以后面试做准备，也巩固一下基础。">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-03-05T12:22:42.061Z">
+<meta property="og:updated_time" content="2020-03-11T13:21:57.808Z">
 <meta name="twitter:card" content="summary">
   <link rel="canonical" href="https://li1m.github.io/2020/03/05/%E9%9D%A2%E8%AF%95/">
 
@@ -293,11 +293,19 @@
                 
               
 
-              <time title="Created: 2020-03-05 12:06:02 / Modified: 20:22:42" itemprop="dateCreated datePublished" datetime="2020-03-05T12:06:02+08:00">2020-03-05</time>
+              <time title="Created: 2020-03-05 12:06:02" itemprop="dateCreated datePublished" datetime="2020-03-05T12:06:02+08:00">2020-03-05</time>
             </span>
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-03-11 21:21:57" itemprop="dateModified" datetime="2020-03-11T21:21:57+08:00">2020-03-11</time>
+              </span>
             
           
 
@@ -318,7 +326,7 @@
               
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>1.6k</span>
+              <span>4k</span>
             </span>
           
             <span class="post-meta-item" title="Reading time">
@@ -328,7 +336,7 @@
               
                 <span class="post-meta-item-text">Reading time &asymp;</span>
               
-              <span>1 mins.</span>
+              <span>4 mins.</span>
             </span>
           
             <div class="post-description">在此记录平时看到的一些面试问题，为以后面试做准备，也巩固一下基础。</div>
@@ -370,23 +378,94 @@
 
 <p>协议：</p>
 <ul>
-<li>TCP三次握手</li>
+<li>TCP三次握手<ul>
+<li>tcp属于传输层，三次握手，首先A向B发SYN（同步请求），然后B回复SYN+ACK（同步请求应答），最后A回复ACK确认，<code>SYN(synchronous建立联机),ACK(acknowledgement确认),PSH(push传送),FIN(finish结束),RST(reset重置),URG(urgent紧急),Sequence number(顺序号码),Acknowledge number(确认号码)</code></li>
+</ul>
+</li>
 </ul>
 <ul>
-<li>TCP与UDP的区别</li>
-<li>HTTP协议的组成部分，常见的HTTP头的含义</li>
-<li>浏览器打开网站的工作流程</li>
-<li>域名解析的原理</li>
-<li>HTTPS的密钥交换过程</li>
-<li>HTTP状态码的含义</li>
+<li><p>TCP与UDP的区别</p>
+<ul>
+<li>TCP是面向连接的，可靠性高；UDP是基于非连接的，可靠性低</li>
+<li>由于TCP是连接的通信，需要有三次握手、重新确认等连接过程，会有延时，实时性差，同时过程复杂，也使其易于攻击；UDP没有建立连接的过程，因而实时性较强，也稍安全</li>
+<li>在传输相同大小的数据时，TCP首部开销20字节；UDP首部开销8字节，TCP报头比UDP复杂，故实际包含的用户数据较少。TCP在IP协议的基础上添加了序号机制、确认机制、超时重传机制等，保证了传输的可靠性，不会出现丢包或乱序，而UDP有丢包，故TCP开销大，UDP开销较小</li>
+<li>每条TCP连接只能时点到点的；UDP支持一对一、一对多、多对一、多对多的交互通信</li>
+<li>应用场景选择<br>udp一般用于视频电话传输。对实时性要求高和高速传输的场合下使用UDP;在可靠性要求低，追求效率的情况下使用<br>tcp一般要求数据完整性，准确性的传输。需要传输大量数据且对可靠性要求高的情况下使用。</li>
+</ul>
+</li>
+<li><p>HTTP协议的组成部分，常见的HTTP头的含义</p>
+<ul>
+<li><p>Http协议分为三部分，Http状态行、Http请求头，Http响应</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">请求头</span><br><span class="line">Accept：可接受响应类型（application/json、text/plain等）</span><br><span class="line">Accept-Charest：可接收的字符集（utf-8等）</span><br><span class="line">Accept-Encoding：可接受的相应内容的编码方式（gzip、deflate等）</span><br><span class="line">Accept-Language：可接受的响应内容语言列表（en-US、zh-CN等）</span><br><span class="line">Authorization：http认证信息（oauth认证）</span><br><span class="line">Cache-Control：缓存机制控制（on-cache、on-store、max-age、public、private）</span><br><span class="line">Connection：客户端优先使用的链接类型（keep-alive、upgrade）</span><br><span class="line">User-Agent：浏览器的身份标识字符串</span><br><span class="line">Origin：发起一个针对跨域资源共享的请求</span><br><span class="line">If-Modified-Since：上一次响应的Last-Modified的值回当做If-Modified-Since的值发送给服务器</span><br><span class="line">If-None-Match：上一次响应的ETag的值会当做If-None-Match的值发送给服务器</span><br><span class="line">Referer：表示跳转到当期那页面的之前页面</span><br><span class="line">响应头</span><br><span class="line">Cache-Control：no-store no-cache max-age等等</span><br><span class="line">Date：响应时间</span><br><span class="line">Content-Length：响应内容大小</span><br><span class="line">Content-Type：响应类型</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>浏览器打开网站的工作流程</p>
+<ul>
+<li>搜索本地Dns &gt; 本地host &gt; 向宽带运营商服务器发起Dns解析请求 &gt; 建立TCP连接(三次握手) &gt; 数据传输 &gt; TCP连接断开</li>
+</ul>
+</li>
+<li><p>域名解析的原理</p>
+<ul>
+<li>通过DNS服务器，把域名解析为对应ip进行访问。 </li>
+</ul>
+</li>
+<li><p>HTTPS的密钥交换过程</p>
+<ul>
+<li>客服端接收服务端传输的CA证书，从中提取公钥，加密数据传输到服务端，然后服务端通过自己的私钥解密获取数据。</li>
+</ul>
+</li>
+<li><p>HTTP状态码的含义</p>
+<ul>
+<li><p>1xx 信息处理状态码</p>
+</li>
+<li><p>2xx 成功状态码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">200: 请求已成功，请求所希望的响应头或数据体将随此响应返回。出现此状态码是表示正常状态。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>3xx 重定向状态码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">302：临时性重定向</span><br><span class="line">301：永久重定向，与302的区别是对于SEO更加友好，搜索引擎到页面后爬虫会记录重定向的地址</span><br><span class="line">304：重定向到本地缓存，浏览器中存在访问页面时会用到</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>4xx 客服端错误</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">400：服务器不理解请求的语法</span><br><span class="line">403：服务端收到了请求，但拒绝访问</span><br><span class="line">404：找不到该路径对应的资源</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>5xx 服务端错误</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">500：服务器端执行请求时发生错误</span><br><span class="line">503：服务器处于超负载或者正在停机维护，现在无法处理请求</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+</li>
 </ul>
 <p>常见漏洞：</p>
 <ul>
-<li>CSRF相关的内容（域的概念、跨域的方法、CSRF防御的各种方法对比、Same-site Cookie）</li>
-<li>各种Java反序列化原理（RMI、Fastjson、Weblogic）</li>
-<li>SSRF漏洞原理与常见绕过方法</li>
-<li>XXE漏洞原理与常见利用方法</li>
-<li>SQL注入原理与常见利用方法（包括报错注入、BOOL盲注、时间盲注、宽字节注入等等原理）</li>
+<li><p>CSRF相关的内容（域的概念、跨域的方法、CSRF防御的各种方法对比、Same-site Cookie）</p>
+<ul>
+<li>跨站请求伪造，攻击者盗用了你的身份，以你的名义发送恶意请求。后面的内容等我学javascript再来补充。</li>
+</ul>
+</li>
+<li><p>各种Java反序列化原理（RMI、Fastjson、Weblogic）</p>
+<ul>
+<li>附个链接吧，等我回来补，这方面不了解。。。 <a href="https://paper.seebug.org/312/?from=timeline&isappinstalled=0" target="_blank" rel="noopener">链接</a></li>
+</ul>
+</li>
+<li><p>SSRF漏洞原理与常见绕过方法</p>
+<ul>
+<li><p>服务端请求伪造，通过控制服务端请求来探测外网达不到的内网，可以通过file协议，gopher协议等进行攻击。</p>
+</li>
+<li><p>绕过方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1.http://baidu.com@www.baidu.com/与http://www.baidu.com/请求时是相同的</span><br><span class="line">2.各种IP地址的进制转换</span><br><span class="line">3.URL跳转绕过：http://www.hackersb.cn/redirect.php?url=http://192.168.0.1/</span><br><span class="line">4.短网址绕过 http://t.cn/RwbLKDx</span><br><span class="line">5.xip.io来绕过：http://xxx.192.168.0.1.xip.io/ == 192.168.0.1 (xxx 任意）</span><br><span class="line">指向任意ip的域名：xip.io(37signals开发实现的定制DNS服务)</span><br><span class="line">6.限制了子网段，可以加 :80 端口绕过。http://tieba.baidu.com/f/commit/share/openShareApi?url=http://10.42.7.78:80</span><br><span class="line">7.探测内网域名，或者将自己的域名解析到内网ip</span><br><span class="line">8.例如 http://10.153.138.81/ts.php , 修复时容易出现的获取host时以/分割来确定host，</span><br><span class="line">但这样可以用 http://abc@10.153.138.81/ 绕过</span><br><span class="line">//来源先知</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>XXE漏洞原理与常见利用方法</p>
+<ul>
+<li>XML外部实体注入漏洞，可以用来读文件，探测内网，在特殊清况还可以命令执行。有回显直接构造xml读敏感文件，无回显可以把内容带出来。</li>
+</ul>
+</li>
+<li><p>SQL注入原理与常见利用方法（包括报错注入、BOOL盲注、时间盲注、宽字节注入等等原理）</p>
+<ul>
+<li>用户的输入语句带到数据库进行执行，利用方法联合查询，报错注入很快，但是要有回显，盲注原理就是判断查询的正误，并且正确和错误的区别很明显，宽字节注入原理采用gbk编码，可以将\闭合。</li>
+</ul>
+</li>
 </ul>
 <p>经验相关：</p>
 <ul>
@@ -559,14 +638,14 @@
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
     
-    <span title="Symbols count total">85k</span>
+    <span title="Symbols count total">88k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
     
-    <span title="Reading time total">1:18</span>
+    <span title="Reading time total">1:20</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
   </div>

